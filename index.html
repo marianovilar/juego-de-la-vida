@@ -1,0 +1,2708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La vida académica - El juego de la vida en Puán (UBA)</title>
+  <style>
+    /* ==========================================================================
+       ESTILOS GLOBALES: ESTÉTICA DE JUEGO DE MESA "EL JUEGO DE LA VIDA"
+       Inspirado en el tablero físico clásico: verde pradera, relieve y carreteras
+       ========================================================================== */
+    :root {
+      --bg-board-grass: #4a7c29;
+      --bg-board-grass-light: #5d9a33;
+      --road-orange: #f97316;
+      --road-orange-dark: #ea580c;
+      --road-green: #22c55e;
+      --road-green-dark: #16a34a;
+      --road-blue: #0284c7;
+      --road-red: #ef4444;
+      --road-purple: #9333ea;
+      --road-amber: #f59e0b;
+      --road-curb: #334155;
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --card-bg: #ffffff;
+      
+      --font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: #1e293b;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 30%, #334155 0%, #0f172a 100%);
+    }
+
+    /* BARRA SUPERIOR VINTAGE / BOARD GAME HEADER */
+    header {
+      background: linear-gradient(180deg, #1e3a8a 0%, #172554 100%);
+      border-bottom: 4px solid #f59e0b;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-badge {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #1e1b4b;
+      font-size: 1.5rem;
+      font-weight: 900;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      border: 2px solid #fef3c7;
+    }
+
+    .brand-titles h1 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      color: #fef08a;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .brand-titles p {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-header {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-header:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1540px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 14px;
+      gap: 14px;
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* PANEL LATERAL: FICHA VITAL NARRATIVA (SIN PUNTOS NUMÉRICOS) */
+    .sidebar-panel {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 3px solid #e2e8f0;
+      position: sticky;
+      top: 75px;
+    }
+
+    .player-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed #e2e8f0;
+    }
+
+    .player-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      background: #fef3c7;
+      border: 3px solid #f59e0b;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .player-info h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .player-info .career-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #92400e;
+      background: #fef3c7;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 2px;
+    }
+
+    /* ESTADO VITAL CUALITATIVO (SIN HACER CUENTAS) */
+    .vital-status-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .status-group-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #64748b;
+    }
+
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .status-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    /* Barras de progreso suaves sin números ni porcentajes */
+    .status-meter-bg {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .status-meter-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.4s ease, background-color 0.3s;
+    }
+
+    .badge-eco-holgada { background: #dcfce7; color: #15803d; }
+    .badge-eco-estable { background: #e0f2fe; color: #0369a1; }
+    .badge-eco-ajustada { background: #fef3c7; color: #b45309; }
+    .badge-eco-precaria { background: #fee2e2; color: #b91c1c; animation: pulsePrec 1.5s infinite; }
+
+    @keyframes pulsePrec {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .badge-animo-pleno { background: #dcfce7; color: #15803d; }
+    .badge-animo-bueno { background: #e0f2fe; color: #0369a1; }
+    .badge-animo-estres { background: #fef3c7; color: #b45309; }
+    .badge-animo-burnout { background: #fee2e2; color: #b91c1c; }
+
+    /* CONTROLES DE LA RULETA EN EL PANEL */
+    .spinner-hud-box {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 2px solid #fde68a;
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-spin-wheel {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      border: 3px solid #fef3c7;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 6px 14px rgba(245, 158, 11, 0.4);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-spin-wheel:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(245, 158, 11, 0.5);
+    }
+
+    .btn-spin-wheel:disabled {
+      background: #94a3b8;
+      border-color: #cbd5e1;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .last-spin-display {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #78350f;
+    }
+
+    /* BITÁCORA VITAL */
+    .chronicle-box {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      max-height: 140px;
+      overflow-y: auto;
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .chronicle-title {
+      font-weight: 800;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    .chronicle-entry {
+      padding: 4px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      color: #334155;
+    }
+
+    /* ==========================================================================
+       EL TABLERO DE "EL JUEGO DE LA VIDA": PAISAJE Y CARRETERA SINUOSA
+       ========================================================================== */
+    .board-frame {
+      background: linear-gradient(135deg, #3d6a22 0%, #2f5419 100%);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 2px 6px rgba(255,255,255,0.2);
+      border: 8px solid #fef3c7;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .board-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 8px 16px;
+      border-radius: 12px;
+      color: white;
+      backdrop-filter: blur(4px);
+    }
+
+    .board-title-tag {
+      font-weight: 900;
+      font-size: 0.95rem;
+      color: #fef08a;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .current-stage-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #f59e0b;
+      color: #1e1b4b;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* CONTENEDOR SVG RESPONSIVE DEL TABLERO */
+    .board-svg-container {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #477726;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    svg.board-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    }
+
+    /* CASILLAS EN EL SVG */
+    .tile-group {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .tile-group:hover {
+      filter: brightness(1.12);
+    }
+
+    .tile-group.active-tile {
+      filter: drop-shadow(0 0 8px #fef08a) brightness(1.15);
+    }
+
+    /* FICHA DEL JUGADOR */
+    #player-token-group {
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ==========================================================================
+       LA RULETA CLÁSICA (SPINNER DE "EL JUEGO DE LA VIDA")
+       ========================================================================== */
+    .spinner-svg-group {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .spinner-wheel-rotator {
+      transform-origin: 520px 480px;
+      transition: transform 2.8s cubic-bezier(0.15, 0.9, 0.2, 1);
+    }
+
+    .spinner-pointer {
+      transform-origin: 520px 345px;
+      transition: transform 0.08s ease-out;
+    }
+
+    /* ==========================================================================
+       MODALES Y VENTANAS FLOTANTES
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: white;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      border: 3px solid #fef3c7;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 18px 22px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .modal-header.decision { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
+    .modal-header.oportunidad { background: linear-gradient(135deg, #059669, #047857); }
+    .modal-header.crisis { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+    .modal-header.personal { background: linear-gradient(135deg, #d97706, #b45309); }
+    .modal-header.evento { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+    .modal-header.cobro { background: linear-gradient(135deg, #16a34a, #15803d); }
+    .modal-header.parada { background: linear-gradient(135deg, #b91c1c, #991b1b); }
+    .modal-header.creacion { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+    .modal-header.final { background: linear-gradient(135deg, #be185d, #9d174d); }
+
+    .modal-header-icon {
+      font-size: 2.2rem;
+    }
+
+    .modal-header-text h2 {
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .modal-header-text p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    .modal-body {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 75vh;
+      overflow-y: auto;
+    }
+
+    .modal-narrative {
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: #334155;
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 12px;
+      border-left: 4px solid #cbd5e1;
+    }
+
+    /* BOTONES DE DECISIÓN NARRATIVOS (SIN NÚMEROS) */
+    .decision-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-option {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-option:hover {
+      border-color: #f59e0b;
+      background: #fffbeb;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.15);
+    }
+
+    .option-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-letter {
+      background: #fef3c7;
+      color: #b45309;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      border: 1px solid #fde68a;
+    }
+
+    .option-consequence-narrative {
+      font-size: 0.85rem;
+      color: #475569;
+      padding-left: 36px;
+      line-height: 1.45;
+      font-style: italic;
+    }
+
+    .modal-footer {
+      padding: 14px 22px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 25px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #b45309;
+      transform: translateY(-1px);
+    }
+
+    /* PANTALLA DE CREACIÓN DE PERSONAJE NARRATIVA */
+    .archetypes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .archetypes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .archetype-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .archetype-card:hover {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    .archetype-card.selected {
+      border-color: #f59e0b;
+      background: #fef3c7;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+    }
+
+    .archetype-header {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .archetype-desc {
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.35;
+    }
+
+    /* PANTALLA FINAL NARRATIVA */
+    .ending-hero {
+      text-align: center;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ending-badge {
+      font-size: 4rem;
+      background: #fdf2f8;
+      border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border: 3px solid #fbcfe8;
+    }
+
+    .ending-title {
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .ending-subtitle {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #be185d;
+      background: #fdf2f8;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .ending-narrative {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: #334155;
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 12px;
+      border-left: 4px solid #ec4899;
+      text-align: left;
+    }
+
+    .bisagra-item {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+
+    .bisagra-title {
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 2px;
+    }
+
+    .bisagra-choice {
+      color: #475569;
+    }
+
+    /* TOAST DE VIDA */
+    .life-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .life-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo-badge">🎓</div>
+      <div class="brand-titles">
+        <h1>La vida académica</h1>
+        <p>Filosofía y Letras (Puán - UBA) • Edición tablero de la vida</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-header" id="btn-rules-toggle" title="Ver reglas y dinámica">
+        ℹ️ Cómo jugar
+      </button>
+      <button class="btn-header" id="btn-sound-toggle" title="Alternar sonido">
+        <span id="sound-icon">🔊</span> Sonido
+      </button>
+      <button class="btn-header" id="btn-restart" title="Reiniciar partida">
+        🔄 Nueva partida
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main>
+    <div class="game-layout">
+
+      <!-- PANEL LATERAL: ESTADO VITAL NARRATIVO Y RULETA -->
+      <aside class="sidebar-panel">
+        
+        <!-- Tarjeta del personaje -->
+        <div class="player-card">
+          <div class="player-avatar" id="hud-avatar">📚</div>
+          <div class="player-info">
+            <h3 id="hud-name">Estudiante de Puán</h3>
+            <span class="career-badge" id="hud-career">Letras</span>
+          </div>
+        </div>
+
+        <!-- Módulo de giro de la Ruleta -->
+        <div class="spinner-hud-box">
+          <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: #92400e;">
+            🎡 Ruleta de la vida
+          </div>
+          <button class="btn-spin-wheel" id="btn-spin-wheel">
+            <span>🎡 Girar ruleta</span>
+          </button>
+          <div class="last-spin-display" id="hud-spin-status">
+            Hacé clic en Girar o en la ruleta central
+          </div>
+        </div>
+
+        <!-- Estado Vital Cualitativo (Sin números ni cuentas) -->
+        <div class="vital-status-box">
+          <div class="status-group-title">Condición de vida</div>
+
+          <!-- Economía -->
+          <div class="status-item">
+            <div class="status-item-header">
+              <span>💵 Situación económica:</span>
+              <span class="status-badge badge-eco-estable" id="badge-eco">Estable</span>
+            </div>
+            <div class="status-meter-bg">
+              <div class="status-meter-fill" id="meter-eco" style="width: 50%; background: #38bdf8;"></div>
+            </div>
+          </div>
+
+          <!-- Bienestar -->
+          <div class="status-item">
+            <div class="status-item-header">
+              <span>🧘 Ánimo y energía:</span>
+              <span class="status-badge badge-animo-bueno" id="badge-animo">Con energía</span>
+            </div>
+            <div class="status-meter-bg">
+              <div class="status-meter-fill" id="meter-animo" style="width: 70%; background: #10b981;"></div>
+            </div>
+          </div>
+
+          <!-- Inclinación de Carrera -->
+          <div class="status-item" style="margin-top: 4px;">
+            <div class="status-item-header">
+              <span>🧭 Inclinación actual:</span>
+            </div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: #1e3a8a; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;" id="badge-inclinacion">
+              Exploración vocacional en Puán
+            </div>
+          </div>
+        </div>
+
+        <!-- Bitácora de Vida -->
+        <div class="chronicle-box">
+          <div class="chronicle-title">📜 Bitácora de vida</div>
+          <div id="chronicle-list">
+            <div class="chronicle-entry">Ingresaste a la Facultad de Filosofía y Letras por la puerta de Puán 480.</div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- TABLERO VISUAL ESTILO "EL JUEGO DE LA VIDA" -->
+      <section class="board-frame">
+        <div class="board-header-bar">
+          <div class="board-title-tag">
+            <span>🗺️ El recorrido de Puán</span>
+          </div>
+          <div class="current-stage-tag" id="hud-stage-label">
+            Etapa 1: Ingreso a la carrera
+          </div>
+        </div>
+
+        <!-- Lienzo SVG del Tablero con la Ruleta central integrada -->
+        <div class="board-svg-container">
+          <svg class="board-svg" viewBox="0 0 1100 820" id="board-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Filtro de sombra suave para carreteras -->
+              <filter id="road-shadow" x="-5%" y="-5%" width="120%" height="120%">
+                <feDropShadow dx="3" dy="5" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.35"/>
+              </filter>
+              <!-- Filtro para la ficha del jugador -->
+              <filter id="pawn-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="2" dy="6" stdDeviation="4" flood-color="#000000" flood-opacity="0.45"/>
+              </filter>
+              <!-- Degradado de la Ruleta -->
+              <radialGradient id="spinner-hub-grad" cx="40%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="60%" stop-color="#cbd5e1"/>
+                <stop offset="100%" stop-color="#64748b"/>
+              </radialGradient>
+              <linearGradient id="grass-pattern-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4e822d"/>
+                <stop offset="100%" stop-color="#3b6520"/>
+              </linearGradient>
+            </defs>
+
+            <!-- FONDO DEL TERRENO: PAISAJE DE CAMPUS -->
+            <rect width="1100" height="820" fill="url(#grass-pattern-grad)" rx="16"/>
+
+            <!-- Caminos decorativos de adoquines en el campus -->
+            <path d="M 60 740 Q 300 700 520 480 Q 750 250 1020 200" fill="none" stroke="#60983a" stroke-width="38" opacity="0.35"/>
+            <path d="M 120 180 Q 500 350 820 700" fill="none" stroke="#60983a" stroke-width="32" opacity="0.3"/>
+
+            <!-- ÁRBOLES Y VEGETACIÓN ALREDEDOR DEL TABLERO -->
+            <g id="scenery-trees" opacity="0.85">
+              <circle cx="50" cy="80" r="28" fill="#2d5216"/>
+              <circle cx="65" cy="70" r="22" fill="#3a681c"/>
+              <circle cx="280" cy="40" r="32" fill="#2d5216"/>
+              <circle cx="780" cy="50" r="30" fill="#2d5216"/>
+              <circle cx="1030" cy="80" r="36" fill="#2d5216"/>
+              <circle cx="1060" cy="740" r="34" fill="#2d5216"/>
+              <circle cx="50" cy="400" r="26" fill="#2d5216"/>
+              <circle cx="360" cy="620" r="25" fill="#3a681c"/>
+              <circle cx="680" cy="640" r="28" fill="#3a681c"/>
+              <circle cx="700" cy="190" r="24" fill="#2d5216"/>
+            </g>
+
+            <!-- EDIFICIOS EMBLEMÁTICOS DE PUÁN -->
+            <!-- Puán 480 (Fachada Histórica) -->
+            <g transform="translate(18, 620)" filter="url(#road-shadow)">
+              <rect x="0" y="0" width="85" height="55" fill="#f8fafc" rx="4" stroke="#94a3b8" stroke-width="2"/>
+              <rect x="8" y="10" width="69" height="10" fill="#991b1b" rx="2"/>
+              <text x="42" y="18" fill="white" font-size="8" font-weight="900" text-anchor="middle">PUÁN 480</text>
+              <line x1="20" y1="26" x2="20" y2="55" stroke="#cbd5e1" stroke-width="4"/>
+              <line x1="42" y1="26" x2="42" y2="55" stroke="#cbd5e1" stroke-width="4"/>
+              <line x1="64" y1="26" x2="64" y2="55" stroke="#cbd5e1" stroke-width="4"/>
+            </g>
+
+            <!-- Bar de Puán (Mesas y café) -->
+            <g transform="translate(560, 25)" filter="url(#road-shadow)">
+              <rect x="0" y="0" width="75" height="42" fill="#fef3c7" rx="6" stroke="#d97706" stroke-width="2"/>
+              <text x="37" y="18" fill="#78350f" font-size="9" font-weight="900" text-anchor="middle">☕ BAR DE PUÁN</text>
+              <circle cx="22" cy="30" r="7" fill="#f59e0b"/>
+              <circle cx="52" cy="30" r="7" fill="#f59e0b"/>
+            </g>
+
+            <!-- Pistas y carreteras continuas que unen las casillas -->
+            <g id="board-road-ribbons" filter="url(#road-shadow)">
+              <!-- Línea de trazado continuo que conecta los nodos -->
+              <path id="board-continuous-path" 
+                    d="M 90 720 L 90 600 L 90 480 L 90 360 L 120 240 L 210 150 L 330 100 L 460 90 L 590 90 L 720 100 L 850 140 L 960 210 L 1000 320 L 1000 440 L 990 560 L 940 670 L 830 720 L 700 730 L 410 730 L 290 710 L 200 620 L 210 490 L 240 370 L 340 290 L 470 240 L 620 240 L 750 280 L 820 370 L 800 490 L 740 600" 
+                    fill="none" stroke="#334155" stroke-width="70" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 90 720 L 90 600 L 90 480 L 90 360 L 120 240 L 210 150 L 330 100 L 460 90 L 590 90 L 720 100 L 850 140 L 960 210 L 1000 320 L 1000 440 L 990 560 L 940 670 L 830 720 L 700 730 L 410 730 L 290 710 L 200 620 L 210 490 L 240 370 L 340 290 L 470 240 L 620 240 L 750 280 L 820 370 L 800 490 L 740 600" 
+                    fill="none" stroke="#f1f5f9" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Línea discontinua central blanca estilo ruta de juego de mesa -->
+              <path d="M 90 720 L 90 600 L 90 480 L 90 360 L 120 240 L 210 150 L 330 100 L 460 90 L 590 90 L 720 100 L 850 140 L 960 210 L 1000 320 L 1000 440 L 990 560 L 940 670 L 830 720 L 700 730 L 410 730 L 290 710 L 200 620 L 210 490 L 240 370 L 340 290 L 470 240 L 620 240 L 750 280 L 820 370 L 800 490 L 740 600" 
+                    fill="none" stroke="#ffffff" stroke-width="4" stroke-dasharray="10 8" opacity="0.65"/>
+            </g>
+
+            <!-- GRUPO DE LAS 30 CASILLAS DIBUJADAS SOBRE LA CARRETERA -->
+            <g id="board-tiles-layer">
+              <!-- Renderizado dinámico de las 30 casillas por JS -->
+            </g>
+
+            <!-- LA RULETA CENTRAL CLÁSICA (SPINNER DE "EL JUEGO DE LA VIDA") -->
+            <g id="central-spinner-group" class="spinner-svg-group" transform="translate(0, 0)">
+              
+              <!-- Base exterior / montura plástica de la ruleta -->
+              <circle cx="520" cy="480" r="135" fill="#14532d" stroke="#15803d" stroke-width="8" filter="url(#road-shadow)"/>
+              <circle cx="520" cy="480" r="124" fill="#052e16" stroke="#4ade80" stroke-width="2"/>
+
+              <!-- RUEDA GIRATORIA CON 10 SECTORES MULTICOLOR -->
+              <g id="spinner-rotator" class="spinner-wheel-rotator">
+                <!-- 1. Los 10 sectores triangulares multicolor -->
+                <path d="M 520 480 L 520.0 365.0 A 115 115 0 0 1 587.6 387.0 Z" fill="#ef4444"/>
+                <path d="M 520 480 L 587.6 387.0 A 115 115 0 0 1 629.4 444.5 Z" fill="#f97316"/>
+                <path d="M 520 480 L 629.4 444.5 A 115 115 0 0 1 629.4 515.5 Z" fill="#f59e0b"/>
+                <path d="M 520 480 L 629.4 515.5 A 115 115 0 0 1 587.6 573.0 Z" fill="#eab308"/>
+                <path d="M 520 480 L 587.6 573.0 A 115 115 0 0 1 520.0 595.0 Z" fill="#84cc16"/>
+                <path d="M 520 480 L 520.0 595.0 A 115 115 0 0 1 452.4 573.0 Z" fill="#10b981"/>
+                <path d="M 520 480 L 452.4 573.0 A 115 115 0 0 1 410.6 515.5 Z" fill="#06b6d4"/>
+                <path d="M 520 480 L 410.6 515.5 A 115 115 0 0 1 410.6 444.5 Z" fill="#3b82f6"/>
+                <path d="M 520 480 L 410.6 444.5 A 115 115 0 0 1 452.4 387.0 Z" fill="#8b5cf6"/>
+                <path d="M 520 480 L 452.4 387.0 A 115 115 0 0 1 520.0 365.0 Z" fill="#ec4899"/>
+
+                <!-- 2. Clavijas perimetrales -->
+                <circle cx="520.0" cy="368.0" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="585.8" cy="389.4" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="626.5" cy="445.4" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="626.5" cy="514.6" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="585.8" cy="570.6" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="520.0" cy="592.0" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="454.2" cy="570.6" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="413.5" cy="514.6" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="413.5" cy="445.4" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+                <circle cx="454.2" cy="389.4" r="3" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+
+                <!-- 3. Los 10 números (1 al 10) claramente visibles y centrados en cada casillero -->
+                <text x="544.7" y="403.9" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">1</text>
+                <text x="584.7" y="433.0" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">2</text>
+                <text x="600.0" y="480.0" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">3</text>
+                <text x="584.7" y="527.0" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">4</text>
+                <text x="544.7" y="556.1" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">5</text>
+                <text x="495.3" y="556.1" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">6</text>
+                <text x="455.3" y="527.0" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">7</text>
+                <text x="440.0" y="480.0" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">8</text>
+                <text x="455.3" y="433.0" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="20" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">9</text>
+                <text x="495.3" y="403.9" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" paint-order="stroke fill" font-size="17" font-weight="900" font-family="'Segoe UI', Roboto, sans-serif" text-anchor="middle" dominant-baseline="central">10</text>
+              </g>
+
+              <!-- NÚCLEO CENTRAL 3D PLATEADO ("GIRAR") -->
+              <circle cx="520" cy="480" r="46" fill="url(#spinner-hub-grad)" stroke="#475569" stroke-width="3" filter="url(#road-shadow)"/>
+              <circle cx="520" cy="480" r="38" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+              <text x="520" y="478" fill="#1e293b" font-size="13" font-weight="900" text-anchor="middle">GIRAR</text>
+              <text x="520" y="493" fill="#d97706" font-size="10" font-weight="800" text-anchor="middle">RULETA</text>
+
+              <!-- BRAZO INDICADOR PLÁSTICO BLANCO (CLICKER POINTER) -->
+              <g id="spinner-pointer" class="spinner-pointer">
+                <!-- Flecha indicadora superior que toca las clavijas -->
+                <path d="M 520 340 L 528 368 L 520 375 L 512 368 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" filter="url(#road-shadow)"/>
+                <circle cx="520" cy="345" r="6" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+              </g>
+            </g>
+
+            <!-- FICHA DEL JUGADOR: AUTO / PEÓN CLÁSICO -->
+            <g id="player-token-group" filter="url(#pawn-shadow)">
+              <!-- Vehículo / Carro de "El Juego de la Vida" -->
+              <rect x="-24" y="-14" width="48" height="28" rx="8" fill="#3b82f6" stroke="#ffffff" stroke-width="2.5"/>
+              <!-- Ruedas -->
+              <rect x="-20" y="-17" width="10" height="4" rx="2" fill="#0f172a"/>
+              <rect x="10" y="-17" width="10" height="4" rx="2" fill="#0f172a"/>
+              <rect x="-20" y="13" width="10" height="4" rx="2" fill="#0f172a"/>
+              <rect x="10" y="13" width="10" height="4" rx="2" fill="#0f172a"/>
+              <!-- Pasajeros / Pegs universitarios -->
+              <circle cx="-6" cy="0" r="7" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5"/>
+              <text x="-6" y="4" font-size="8" text-anchor="middle" font-weight="900" fill="#78350f">🎓</text>
+            </g>
+
+          </svg>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- MODAL: CREACIÓN DE PERSONAJE NARRATIVO -->
+  <div class="modal-overlay active" id="modal-char-creator">
+    <div class="modal-card">
+      <div class="modal-header creacion">
+        <div class="modal-header-icon">🎓</div>
+        <div class="modal-header-text">
+          <h2>Bienvenido/a a Puán</h2>
+          <p>Elegí tu nombre y tu perfil inicial antes de cruzar la puerta de la facultad</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 0.85rem; font-weight: 800; color: #334155;">Tu nombre o alias:</label>
+          <input type="text" id="char-name" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.95rem; font-family: inherit;" value="Lic. Sofía" maxlength="25">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 0.85rem; font-weight: 800; color: #334155;">Carrera en humanidades:</label>
+          <select id="char-career" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.95rem; font-family: inherit;">
+            <option value="Letras">Letras (Literatura y Lingüística)</option>
+            <option value="Filosofía">Filosofía</option>
+            <option value="Historia">Historia</option>
+            <option value="Artes">Artes (Cine, Teatro, Plásticas)</option>
+            <option value="Ciencias Antropológicas">Ciencias Antropológicas</option>
+            <option value="Geografía">Geografía</option>
+            <option value="Edición">Edición</option>
+            <option value="Ciencias de la Educación">Ciencias de la Educación</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size: 0.85rem; font-weight: 800; color: #334155;">
+            Seleccioná tu punto de partida vital:
+          </label>
+          <p style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">
+            El destino final no se calcula sumando puntos visibles: se descubre a través de las decisiones que tomes.
+          </p>
+
+          <div class="archetypes-grid">
+            <!-- Arquetipo 1 -->
+            <div class="archetype-card selected" data-archetype="raton">
+              <div class="archetype-header">
+                <span>🦉 El ratón de biblioteca</span>
+              </div>
+              <div class="archetype-desc">
+                Pasión pura por los marcos teóricos y lecturas interminables. Austeridad material y vocación de claustro.
+              </div>
+            </div>
+
+            <!-- Arquetipo 2 -->
+            <div class="archetype-card" data-archetype="rosquero">
+              <div class="archetype-header">
+                <span>🤝 El rosquero de pasillo</span>
+              </div>
+              <div class="archetype-desc">
+                Vínculos en asambleas, relaciones con cátedras y don de gentes. Capacidad para tejer redes institucionales.
+              </div>
+            </div>
+
+            <!-- Arquetipo 3 -->
+            <div class="archetype-card" data-archetype="laburante">
+              <div class="archetype-header">
+                <span>💼 El estudiante trabajador</span>
+              </div>
+              <div class="archetype-desc">
+                Empleo remunerado e independencia financiera. Menos tiempo para la biblioteca, pero los pies en la tierra.
+              </div>
+            </div>
+
+            <!-- Arquetipo 4 -->
+            <div class="archetype-card" data-archetype="equilibrado">
+              <div class="archetype-header">
+                <span>⚖️ El caminante equilibrado</span>
+              </div>
+              <div class="archetype-desc">
+                Balance moderado entre estudio, sociabilidad de bar y recursos personales sin extremismos.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-start-game">🚀 Entrar a Puán</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TARJETA DE DECISIÓN O DILEMA (SIN PUNTOS) -->
+  <div class="modal-overlay" id="modal-card-event">
+    <div class="modal-card">
+      <div class="modal-header decision" id="modal-event-header">
+        <div class="modal-header-icon" id="modal-event-icon">📜</div>
+        <div class="modal-header-text">
+          <h2 id="modal-event-title">Título de la tarjeta</h2>
+          <p id="modal-event-category">Dilema de vida</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        
+        <div class="modal-narrative" id="modal-event-narrative">
+          Situación narrativa...
+        </div>
+
+        <div class="decision-options" id="modal-event-options">
+          <!-- Opciones A y B generadas por JavaScript -->
+        </div>
+
+        <div id="modal-event-feedback" style="display: none; padding: 14px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0; font-size: 0.9rem; color: #166534; line-height: 1.5;">
+        </div>
+
+      </div>
+      <div class="modal-footer" id="modal-event-footer" style="display: none;">
+        <button class="btn-primary" id="btn-modal-continue">Continuar recorrido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REGLAS Y CÓMO JUGAR -->
+  <div class="modal-overlay" id="modal-rules">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header evento">
+        <div class="modal-header-icon">📖</div>
+        <div class="modal-header-text">
+          <h2>Cómo jugar: la vida académica</h2>
+          <p>Un juego de mesa de simulación, azar y sátira universitaria</p>
+        </div>
+      </div>
+      <div class="modal-body" style="font-size: 0.9rem; line-height: 1.6; color: #334155;">
+        <p><strong>🎯 Objetivo:</strong> Recorrer las 30 casillas del campus desde el CBC hasta tu desenlace profesional. <em>El destino no se elige: se descubre</em> según las decisiones y renuncias acumuladas.</p>
+        
+        <h4 style="margin-top: 10px; color: #1e3a8a;">🎡 La ruleta y el azar:</h4>
+        <p>En cada turno girás la ruleta para avanzar entre 1 y 10 casillas. Las casillas con <strong>🛑 Parada obligatoria (monografía y concurso)</strong> detienen tu avance para resolver hitos ineludibles de tu carrera.</p>
+
+        <h4 style="margin-top: 10px; color: #1e3a8a;">⚖️ Las decisiones (sin hacer cuentas):</h4>
+        <p>Los puntos numéricos permanecen ocultos. La idea del juego es que elijas con honestidad vital, política o vocacional: ¿priorizás la consagración intelectual, la estabilidad económica, la militancia colectiva o la paz mental?</p>
+
+        <h4 style="margin-top: 10px; color: #1e3a8a;">💵 Día de cobro y precariedad:</h4>
+        <p>Al caer o pasar por las casillas de <strong>Día de cobro (beca/sueldo)</strong>, tus finanzas reciben un respiro. Si tus recursos llegan a cero, entrás en <em>modo precariedad</em>: tu bienestar se resiente, ¡pero la vocación resiste!</p>
+
+        <h4 style="margin-top: 10px; color: #1e3a8a;">🏆 Los cuatro destinos profesionales:</h4>
+        <p>Al llegar a la última casilla, el sistema revela cuál de las cuatro trayectorias has construido: <strong>Investigador full-time</strong>, <strong>Profesor de secundaria/terciario</strong>, <strong>Crítico cultural</strong> o <strong>Estratega fuera del campo / sector tech</strong>.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-close-rules">¡Entendido!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DESENLACE PROFESIONAL FINAL -->
+  <div class="modal-overlay" id="modal-ending">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header final">
+        <div class="modal-header-icon">🏆</div>
+        <div class="modal-header-text">
+          <h2>Tu destino descubierto</h2>
+          <p>El veredicto de tu trayectoria acumulada</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        
+        <div class="ending-hero">
+          <div class="ending-badge" id="end-badge">🔬</div>
+          <div class="ending-title" id="end-title">Investigador full-time</div>
+          <div class="ending-subtitle" id="end-subtitle">Carrera del investigador científico (CONICET / UBA)</div>
+        </div>
+
+        <div class="ending-narrative" id="end-narrative">
+          Crónica final...
+        </div>
+
+        <div style="font-weight: 800; font-size: 0.9rem; color: #1e293b; margin-top: 4px;">
+          ⚖️ Tres decisiones bisagra de tu carrera:
+        </div>
+        <div id="end-bisagras-list">
+          <!-- 3 momentos cruciales -->
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 10px;">
+            <h4 style="color: #166534; font-size: 0.85rem; margin-bottom: 4px;">✨ Mayores logros</h4>
+            <div id="end-achievements" style="font-size: 0.8rem; color: #14532d; line-height: 1.45;"></div>
+          </div>
+          <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 12px; border-radius: 10px;">
+            <h4 style="color: #991b1b; font-size: 0.85rem; margin-bottom: 4px;">🎭 Renuncias y paradojas</h4>
+            <div id="end-contradictions" style="font-size: 0.8rem; color: #7f1d1d; line-height: 1.45;"></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-play-again" style="background: linear-gradient(135deg, #ec4899, #be185d);">
+          🔄 Jugar otra vida
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST DE VIDA FLOTANTE -->
+  <div class="life-toast" id="life-toast">
+    <span id="toast-icon">⚡</span>
+    <span id="toast-text">Acontecimiento vital</span>
+  </div>
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT DEL JUEGO
+       ========================================================================== -->
+  <script>
+    /**
+     * ========================================================================
+     * 1. SISTEMA DE AUDIO PROCEDIMENTAL (Web Audio API)
+     * ========================================================================
+     */
+    const AudioEngine = {
+      ctx: null,
+      enabled: true,
+
+      init() {
+        if (!this.ctx && (window.AudioContext || window.webkitAudioContext)) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      },
+
+      toggle() {
+        this.enabled = !this.enabled;
+        return this.enabled;
+      },
+
+      playTick() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(650, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(180, this.ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.05);
+      },
+
+      playStep() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(580, this.ctx.currentTime + 0.09);
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.11);
+      },
+
+      playCard() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(880, this.ctx.currentTime + 0.16);
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.22);
+      },
+
+      playPayDay() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.07);
+          gain.gain.setValueAtTime(0.15, this.ctx.currentTime + idx * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.07 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + idx * 0.07);
+          osc.stop(this.ctx.currentTime + idx * 0.07 + 0.26);
+        });
+      },
+
+      playCrisis() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(280, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.32);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.33);
+      }
+    };
+
+    /**
+     * ========================================================================
+     * 2. ESTRUCTURA DE CASILLAS DEL TABLERO (30 CASILLAS EN BUCLE ORGÁNICO)
+     * ========================================================================
+     */
+    const TILES = [
+      // ETAPA 1: INGRESO
+      { id: 0, x: 90, y: 720, title: "Puán 480", type: "inicio", icon: "🏛️", stageId: 1, color: "#eab308", isAuto: true, autoText: "¡Primer paso en Puán! El viaje ha comenzado." },
+      { id: 1, x: 90, y: 600, title: "Teórico a las 8", type: "personal", icon: "☕", stageId: 1, color: "#f59e0b", cardKey: "teorico_madrugada" },
+      { id: 2, x: 90, y: 480, title: "Fotocopiadora", type: "decision", icon: "📑", stageId: 1, color: "#f97316", cardKey: "cola_fotocopiadora" },
+      { id: 3, x: 90, y: 360, title: "Grupo de estudio", type: "oportunidad", icon: "🤝", stageId: 1, color: "#9333ea", cardKey: "grupo_estudio" },
+      { id: 4, x: 120, y: 240, title: "Asamblea en el patio", type: "evento", icon: "📢", stageId: 1, color: "#0284c7", cardKey: "asamblea_estudiantil" },
+
+      // ETAPA 2: VIDA ESTUDIANTIL
+      { id: 5, x: 210, y: 150, title: "SIU Guaraní", type: "crisis", icon: "💻", stageId: 2, color: "#ef4444", cardKey: "siu_guarani" },
+      { id: 6, x: 330, y: 100, title: "Ayudantía de cátedra", type: "decision", icon: "👨‍🏫", stageId: 2, color: "#f97316", cardKey: "ayudantia_ad_honorem" },
+      { id: 7, x: 460, y: 90, title: "Final oral filtro", type: "avance", icon: "📚", stageId: 2, color: "#06b6d4", cardKey: "materia_filtro" },
+      { id: 8, x: 590, y: 90, title: "Bar de Puán", type: "personal", icon: "🍻", stageId: 2, color: "#f59e0b", cardKey: "bar_de_puan" },
+      { id: 9, x: 720, y: 100, title: "Jornadas de jóvenes", type: "oportunidad", icon: "🎤", stageId: 2, color: "#9333ea", cardKey: "jornadas_jovenes" },
+
+      // ETAPA 3: GRADUACIÓN Y PRIMERAS DECISIONES LABORALES
+      { id: 10, x: 850, y: 140, title: "Parada: monografía", type: "parada", icon: "🛑", stageId: 3, color: "#b91c1c", isStop: true, cardKey: "monografia_seminario" },
+      { id: 11, x: 960, y: 210, title: "Graduación", type: "personal", icon: "🎉", stageId: 3, color: "#f59e0b", cardKey: "fiesta_graduacion" },
+      { id: 12, x: 1000, y: 320, title: "Horas en secundaria", type: "decision", icon: "🎒", stageId: 3, color: "#f97316", cardKey: "horas_escuela" },
+      { id: 13, x: 1000, y: 440, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 3, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Cobrás tus honorarios y tus finanzas respiran.", autoBonus: { recursos: 25, bienestar: 6 } },
+      { id: 14, x: 990, y: 560, title: "Bolsa de becas", type: "oportunidad", icon: "🌟", stageId: 3, color: "#9333ea", cardKey: "convocatoria_becas" },
+
+      // ETAPA 4: POSGRADO E INVESTIGACIÓN
+      { id: 15, x: 940, y: 670, title: "Beca doctoral", type: "decision", icon: "🔬", stageId: 4, color: "#f97316", cardKey: "beca_doctoral" },
+      { id: 16, x: 830, y: 720, title: "Congreso en Lisboa", type: "decision", icon: "✈️", stageId: 4, color: "#f97316", cardKey: "congreso_internacional" },
+      { id: 17, x: 700, y: 730, title: "Crisis de alquiler", type: "crisis", icon: "🏠", stageId: 4, color: "#ef4444", cardKey: "crisis_alquiler" },
+      { id: 18, x: 410, y: 730, title: "Artículo Q1", type: "decision", icon: "📰", stageId: 4, color: "#f97316", cardKey: "articulo_oportuno" },
+      { id: 19, x: 290, y: 710, title: "Dictaminador 2", type: "crisis", icon: "⚡", stageId: 4, color: "#ef4444", cardKey: "dictaminador_dos" },
+
+      // ETAPA 5: CONSOLIDACIÓN LABORAL
+      { id: 20, x: 200, y: 620, title: "Parada: concurso", type: "parada", icon: "🛑", stageId: 5, color: "#b91c1c", isStop: true, cardKey: "concurso_docente" },
+      { id: 21, x: 210, y: 490, title: "Oferta tech", type: "decision", icon: "💼", stageId: 5, color: "#f97316", cardKey: "oferta_privado" },
+      { id: 22, x: 240, y: 370, title: "Cargo de gestión", type: "decision", icon: "🗄️", stageId: 5, color: "#f97316", cardKey: "cargo_gestion" },
+      { id: 23, x: 340, y: 290, title: "Columna cultural", type: "oportunidad", icon: "🎙️", stageId: 5, color: "#9333ea", cardKey: "columna_cultural" },
+      { id: 24, x: 470, y: 240, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 5, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Ingresan sueldos de cátedra y becas de investigación.", autoBonus: { recursos: 30, bienestar: 8 } },
+
+      // ETAPA 6: RECTA FINAL Y DESENLACE
+      { id: 25, x: 620, y: 240, title: "Debate sobre IA", type: "decision", icon: "🤖", stageId: 6, color: "#f97316", cardKey: "ia_humanidades" },
+      { id: 26, x: 750, y: 280, title: "Agotamiento total", type: "personal", icon: "🧘", stageId: 6, color: "#f59e0b", cardKey: "agotamiento_existencial" },
+      { id: 27, x: 820, y: 370, title: "Extensión barrial", type: "decision", icon: "🌱", stageId: 6, color: "#f97316", cardKey: "extension_comunitaria" },
+      { id: 28, x: 800, y: 490, title: "Última firma", type: "avance", icon: "🖋️", stageId: 6, color: "#06b6d4", isAuto: true, autoText: "¡Última firma oficial completada! Tu expediente está listo.", autoBonus: { capitalAcademico: 12, prestigio: 10 } },
+      { id: 29, x: 740, y: 600, title: "Meta final", type: "final", icon: "🏆", stageId: 6, color: "#be185d", isAuto: true, autoText: "¡Llegaste a la meta! Descubriendo tu destino profesional..." }
+    ];
+
+    /**
+     * ========================================================================
+     * 3. BASE DE DATOS DE TARJETAS NARRATIVAS (SIN NÚMEROS EN PANTALLA)
+     * ========================================================================
+     */
+    const CARDS = {
+      teorico_madrugada: {
+        title: "Teórico de las 8 en el aula 108",
+        category: "personal",
+        icon: "☕",
+        narrative: "Tu cátedra de cabecera puso las clases teóricas de madrugada en pleno invierno. Podés madrugar religiosamente para sentarte en primera fila o estudiar con desgrabaciones y dormir dos horas más.",
+        options: [
+          {
+            text: "Madrugar y sentarse en primera fila",
+            consequenceText: "El titular te memoriza la cara y dominás la bibliografía, a costa de vivir con cansancio y café amargo.",
+            effects: { capitalAcademico: 8, prestigio: 5, bienestar: -10 },
+            tag: "investigador"
+          },
+          {
+            text: "Dormir y comprar las desgrabaciones",
+            consequenceText: "Cuidás tu salud mental y hacés amigos en la fotocopiadora, aunque gastás dinero de tu bolsillo.",
+            effects: { bienestar: 12, recursos: -6, sociabilidad: 6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      cola_fotocopiadora: {
+        title: "La cola de la fotocopiadora",
+        category: "decision",
+        icon: "📑",
+        narrative: "Hay dos horas de fila para retirar el práctico. Un militante te ofrece el PDF escaneado chueco, mientras otro vende la copia anillada impecable a precio blue.",
+        options: [
+          {
+            text: "Comprar el anillado de lujo impecable",
+            consequenceText: "Tus apuntes huelen a tóner fresco y tus subrayados son la envidia del pabellón, pero achicás tu presupuesto.",
+            effects: { recursos: -12, capitalAcademico: 8, bienestar: 4 },
+            tag: "investigador"
+          },
+          {
+            text: "Descargar el PDF pirata y compartirlo",
+            consequenceText: "Ahorrás dinero y te ganás la simpatía de la comisión compartiendo el enlace con OCR incluido.",
+            effects: { recursos: 4, sociabilidad: 8, compromisoSocial: 6 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      grupo_estudio: {
+        title: "Grupo de estudio de los sábados",
+        category: "oportunidad",
+        icon: "🤝",
+        narrative: "Estudiantes avanzados te invitan a un grupo autónomo de lectura de Walter Benjamin y Spinoza los fines de semana.",
+        options: [
+          {
+            text: "Sumarte al debate teórico riguroso",
+            consequenceText: "Descubrís afinidades electivas y leen textos en alemán, sacrificando tus tardes de ocio.",
+            effects: { capitalAcademico: 10, sociabilidad: 6, bienestar: -6 },
+            tag: "investigador"
+          },
+          {
+            text: "Preservar el fin de semana para descansar",
+            consequenceText: "Mantenés una vida equilibrada y vínculos afectivos fuera del microclima académico.",
+            effects: { bienestar: 14, sociabilidad: 6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      asamblea_estudiantil: {
+        title: "Asamblea interclaustro en el patio",
+        category: "evento",
+        icon: "📢",
+        narrative: "La discusión presupuestaria paraliza la facultad. Se debate cortar la calle y tomar medidas gremiales o continuar con las lecturas.",
+        options: [
+          {
+            text: "Militar la asamblea y redactar el petitorio",
+            consequenceText: "Aprendés retórica de barricada y solidaridad colectiva, postergando la entrega de tus fichas de lectura.",
+            effects: { compromisoSocial: 14, sociabilidad: 8, capitalAcademico: -6 },
+            tag: "docente"
+          },
+          {
+            text: "Aprovechar el aula vacía para avanzar tu texto",
+            consequenceText: "Avanzás 15 páginas de tu proyecto personal, aunque tus pares te miran con escepticismo de clase.",
+            effects: { capitalAcademico: 10, compromisoSocial: -6, bienestar: 4 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      siu_guarani: {
+        title: "La ruleta del SIU Guaraní",
+        category: "crisis",
+        icon: "💻",
+        narrative: "A medianoche abren las inscripciones y los servidores colapsan al minuto 0. Te quedaste afuera del seminario que necesitás para graduarte.",
+        options: [
+          {
+            text: "Hacer guardia en el pasillo para rogarle al titular",
+            consequenceText: "Esperás cuatro horas de pie, pero conseguís que te acepten como oyente con promesa de promoción.",
+            effects: { capitalInstitucional: 8, bienestar: -10, capitalAcademico: 5 },
+            tag: "investigador"
+          },
+          {
+            text: "Anotarte en una materia optativa flexible",
+            consequenceText: "Cursás una materia liviana sin estrés y ganás tiempo libre para buscar changas laborales.",
+            effects: { bienestar: 10, recursos: 10 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      ayudantia_ad_honorem: {
+        title: "Ayudantía ad honorem de segunda",
+        category: "decision",
+        icon: "👨‍🏫",
+        narrative: "El titular de cátedra te ofrece ser ayudante de prácticos sin sueldo, prometiendo que te servirá para 'hacer currículum' y futuras cartas de aval.",
+        options: [
+          {
+            text: "Aceptar el cargo ad honorem con orgullo",
+            consequenceText: "Corregís 60 parciales un domingo gratis, pero tu nombre aparece en el programa oficial de la materia.",
+            effects: { capitalInstitucional: 14, prestigio: 8, recursos: -8 },
+            tag: "investigador"
+          },
+          {
+            text: "Rechazar el trabajo gratuito y buscar empleo pago",
+            consequenceText: "Defendés tu dignidad laboral y pagás tus expensas con un trabajo remunerado en blanco.",
+            effects: { recursos: 18, bienestar: 8, capitalInstitucional: -6 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      materia_filtro: {
+        title: "El final oral con tribunal temible",
+        category: "avance",
+        icon: "📚",
+        narrative: "Llegó el examen oral de la materia más temida. Tres profesores con gesto severo te piden que elijas un punto del programa.",
+        options: [
+          {
+            text: "Defender una hipótesis teórica audaz y arriesgada",
+            consequenceText: "El tribunal te felicita por tu originalidad y te identifican como una promesa intelectual de la carrera.",
+            effects: { capitalAcademico: 14, prestigio: 10, bienestar: -6 },
+            tag: "investigador"
+          },
+          {
+            text: "Hacer una exposición prudente, clásica y sin fisuras",
+            consequenceText: "Aprobás con solvencia sin exponerte al fuego cruzado ni sufrir sobresaltos.",
+            effects: { capitalAcademico: 8, bienestar: 6, sociabilidad: 4 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      bar_de_puan: {
+        title: "Tertulia nocturna en el bar de Puán",
+        category: "personal",
+        icon: "🍻",
+        narrative: "Terminaron los prácticos y la discusión epistemológica continúa con cerveza tirada, maníes y humo en el bar de la esquina.",
+        options: [
+          {
+            text: "Quedarte hasta el cierre debatiendo estética y política",
+            consequenceText: "Te convertís en un personaje entrañable de la noche de Caballito y tejés alianzas clave para el futuro.",
+            effects: { sociabilidad: 14, prestigio: 6, recursos: -8 },
+            tag: "critico"
+          },
+          {
+            text: "Tomar el subte temprano para cuidar tu bolsillo y sueño",
+            consequenceText: "Dormís ocho horas seguidas y tu cuenta bancaria agradece la sensatez madura.",
+            effects: { bienestar: 10, recursos: 8 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      jornadas_jovenes: {
+        title: "Jornadas de jóvenes investigadores",
+        category: "oportunidad",
+        icon: "🎤",
+        narrative: "Se abre la convocatoria para presentar tu primera ponencia. Podés armar un texto formal o un ensayo irreverente.",
+        options: [
+          {
+            text: "Presentar un texto ortodoxo con 40 notas al pie",
+            consequenceText: "Tu trabajo es elogiado por los profesores mayores por su rigurosidad filológica impecable.",
+            effects: { capitalAcademico: 10, capitalInstitucional: 6 },
+            tag: "investigador"
+          },
+          {
+            text: "Escribir un ensayo provocador sobre cultura y política",
+            consequenceText: "La mesa explota en aplausos y te invitan a colaborar en una revista cultural independiente.",
+            effects: { prestigio: 10, sociabilidad: 8, compromisoSocial: 6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      monografia_seminario: {
+        title: "Monografía del último seminario de grado",
+        category: "parada",
+        icon: "🛑",
+        narrative: "Llegaste al último seminario de la carrera para recibirte de licenciado/a. El profesor exige una monografía exhaustiva con hipótesis original y aparato crítico riguroso para firmar las actas finales.",
+        options: [
+          {
+            text: "Escribir un ensayo monumental y exhaustivo (un año más)",
+            consequenceText: "Un trabajo de erudición impecable que la cátedra elogia de pie, a costa de postergar tu graduación y tus ingresos.",
+            effects: { capitalAcademico: 16, prestigio: 12, bienestar: -12, recursos: -12 },
+            tag: "investigador"
+          },
+          {
+            text: "Entregar una monografía sobria, precisa y pragmática",
+            consequenceText: "Aprobás con solvencia, cerrás las actas de la última materia y ya tenés el título listo para salir al mercado.",
+            effects: { bienestar: 12, recursos: 12, capitalInstitucional: 8 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      fiesta_graduacion: {
+        title: "Festejo de graduación en las escalinatas",
+        category: "personal",
+        icon: "🎉",
+        narrative: "Tus amigos te esperan en las puertas de Puán con harina, papel picado y pancartas irónicas. ¡Ya tenés el título!",
+        options: [
+          {
+            text: "Celebrar a lo grande e invitar la ronda en el bar",
+            consequenceText: "Una noche inolvidable donde festejan el fin de los finales y el inicio de la incertidumbre adulta.",
+            effects: { sociabilidad: 16, bienestar: 12, recursos: -12 },
+            tag: "critico"
+          },
+          {
+            text: "Brindis íntimo y ordenar certificados para mañana",
+            consequenceText: "Mantenés los pies sobre la tierra y al día siguiente ya estás tramitando tus legalizaciones.",
+            effects: { bienestar: 8, recursos: 8, capitalInstitucional: 6 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      horas_escuela: {
+        title: "Las horas en la escuela secundaria",
+        category: "decision",
+        icon: "🎒",
+        narrative: "El acto público de asignación docente te ofrece 18 horas en una escuela media pública. Sueldo con recibo y obra social, pero 90 carpetas por corregir.",
+        options: [
+          {
+            text: "Agarrar las horas y poner el cuerpo en el aula",
+            consequenceText: "Conectás con la realidad viva de los pibes y aprendés pedagogía real en la trinchera escolar cotidiana.",
+            effects: { recursos: 24, compromisoSocial: 18, capitalAcademico: -8 },
+            tag: "docente"
+          },
+          {
+            text: "Rechazarlas para preservar tus horas de investigación",
+            consequenceText: "Conservás tus tardes para la biblioteca y congresos, viviendo con presupuesto austero.",
+            effects: { capitalAcademico: 12, prestigio: 8, recursos: -16 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      convocatoria_becas: {
+        title: "La convocatoria de becas de posgrado",
+        category: "oportunidad",
+        icon: "🌟",
+        narrative: "Se abre el llamado a becas de doctorado de CONICET y UBA. El formulario de postulación tiene decenas de pestañas obligatorias.",
+        options: [
+          {
+            text: "Completar la postulación milimétrica con avales de cátedra",
+            consequenceText: "Dedicás noches enteras a pulir el proyecto y quedás en los primeros puestos del orden de mérito.",
+            effects: { capitalAcademico: 12, capitalInstitucional: 8, bienestar: -10 },
+            tag: "investigador"
+          },
+          {
+            text: "Explorar becas internacionales o fundaciones externas",
+            consequenceText: "Te abrís camino por fuera de la rosca local y ampliás tus redes en el exterior.",
+            effects: { prestigio: 12, recursos: 14, sociabilidad: 6 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      beca_doctoral: {
+        title: "La beca doctoral adjudicada",
+        category: "decision",
+        icon: "🔬",
+        narrative: "¡Te otorgaron la beca de doctorado! Tenés dedicación exclusiva obligatoria, pero el estipendio apenas cubre el alquiler de un monoambiente.",
+        options: [
+          {
+            text: "Apostar todo a la investigación pura y de dedicación plena",
+            consequenceText: "Sos formalmente un científico de humanidades. Vivís de seminarios y papers, con economía ajustada.",
+            effects: { capitalAcademico: 18, prestigio: 14, recursos: -12 },
+            tag: "investigador"
+          },
+          {
+            text: "Complementar la beca con changas de redacción privada",
+            consequenceText: "Redactás contenidos comerciales mientras avanzás tu marco teórico. El dinero extra da tranquilidad.",
+            effects: { recursos: 22, capitalInstitucional: -6, bienestar: 6 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      congreso_internacional: {
+        title: "El congreso internacional en Lisboa",
+        category: "decision",
+        icon: "✈️",
+        narrative: "Aceptaron tu ponencia en Europa. El pasaje cuesta tres meses de tu sueldo y el subsidio universitario cubre apenas una fracción.",
+        options: [
+          {
+            text: "Endeudarte con tarjeta en cuotas y viajar a exponer",
+            consequenceText: "Exponés en auditorios de renombre y te sacás fotos con las vacas sagradas, quedando con deudas bancarias.",
+            effects: { prestigio: 20, capitalAcademico: 14, recursos: -28 },
+            tag: "investigador"
+          },
+          {
+            text: "Participar online y priorizar encuentros regionales",
+            consequenceText: "Exponés de forma virtual, comés un asado con colegas de La Plata o Rosario y cuidás tu bolsillo.",
+            effects: { recursos: 18, sociabilidad: 10, bienestar: 8 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      crisis_alquiler: {
+        title: "Renovación de contrato de alquiler",
+        category: "crisis",
+        icon: "🏠",
+        narrative: "La inmobiliaria triplica el alquiler de tu departamento cerca de Puán y pide garantías imposibles.",
+        options: [
+          {
+            text: "Mudarte a una casa compartida con tres tesistas",
+            consequenceText: "Comparten gastos y debates de cocina a las 3 AM, tolerando el desorden colectivo.",
+            effects: { sociabilidad: 14, recursos: 10, bienestar: -8 },
+            tag: "critico"
+          },
+          {
+            text: "Irte al conurbano y sumar 2 horas de tren diarias",
+            consequenceText: "Aprovechás los viajes en tren para leer clásicos, aunque el cansancio corporal empieza a acumularse.",
+            effects: { recursos: 16, compromisoSocial: 10, bienestar: -12 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      articulo_oportuno: {
+        title: "El artículo en revista indexada Q1",
+        category: "decision",
+        icon: "📰",
+        narrative: "Una revista de alto impacto te invita a coordinar un dossier sobre un tema de moda que no coincide con tu proyecto personal.",
+        options: [
+          {
+            text: "Subirte a la ola y publicar el artículo estratégico",
+            consequenceText: "Tu índice de citas se dispara y tu nombre aparece en los buscadores académicos internacionales.",
+            effects: { prestigio: 18, capitalAcademico: 12, bienestar: -8 },
+            tag: "investigador"
+          },
+          {
+            text: "Rechazar la moda y priorizar tu propio libro autoral",
+            consequenceText: "Conservás tu coherencia intelectual y no cedés ante las exigencias productivistas del paper.",
+            effects: { bienestar: 14, prestigio: -6, capitalAcademico: 6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      dictaminador_dos: {
+        title: "El dictamen del evaluador n.º 2",
+        category: "crisis",
+        icon: "⚡",
+        narrative: "El temido referato ciego rechazó tu artículo con ironías ácidas, exigiendo que cites toda la bibliografía de su propia cátedra.",
+        options: [
+          {
+            text: "Tragarte el orgullo, acatar las correcciones y citarlo",
+            consequenceText: "El texto finalmente se publica. Aprendiste la lección más amarga de la Realpolitik académica.",
+            effects: { capitalInstitucional: 12, capitalAcademico: 8, bienestar: -10 },
+            tag: "investigador"
+          },
+          {
+            text: "Retirar el texto y enviarlo a una revista independiente",
+            consequenceText: "El texto sale con portada ilustrada en una revista cultural y recibe lecturas del público real.",
+            effects: { bienestar: 12, prestigio: 8, capitalInstitucional: -6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      concurso_docente: {
+        title: "El concurso docente regular",
+        category: "parada",
+        icon: "🛑",
+        narrative: "Se abre concurso público de antecedentes y oposición para jefe de trabajos prácticos (JTP). Tenés pocos días para preparar la clase frente al tribunal.",
+        options: [
+          {
+            text: "Encerrarte a estudiar sin dormir para ganar el cargo",
+            consequenceText: "Tu clase de oposición fue brillante. Ganás estabilidad por varios años en la cátedra oficial.",
+            effects: { capitalInstitucional: 16, capitalAcademico: 14, bienestar: -14 },
+            tag: "investigador"
+          },
+          {
+            text: "Presentarte relajado/a sin descuidar tu empleo actual",
+            consequenceText: "Quedás segundo en el orden de mérito pero conservás tu paz mental y tu trabajo en la escuela.",
+            effects: { bienestar: 12, recursos: 10, sociabilidad: 6 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      oferta_privado: {
+        title: "La oferta inesperada del sector tech",
+        category: "decision",
+        icon: "💼",
+        narrative: "Una multinacional tecnológica te ofrece un puesto como diseñador de contenidos / prompt engineer, con sueldo en dólares y trabajo remoto.",
+        options: [
+          {
+            text: "Aceptar la oferta corporativa y migrar al sector privado",
+            consequenceText: "Pagás tus deudas, comprás buena tecnología y aplicás semiótica a interfaces digitales y métricas de retención.",
+            effects: { recursos: 45, bienestar: 12, capitalAcademico: -12, compromisoSocial: -10 },
+            tag: "tech_privado"
+          },
+          {
+            text: "Rechazar los dólares y jurar fidelidad a la trinchera pública",
+            consequenceText: "Tus colegas aplauden tu lealtad doctrinaria mientras vos hacés cuentas para pagar la SUBE.",
+            effects: { compromisoSocial: 18, prestigio: 12, recursos: -18 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      cargo_gestion: {
+        title: "La secretaría de gestión institucional",
+        category: "decision",
+        icon: "🗄️",
+        narrative: "Las autoridades de la facultad te proponen asumir una secretaría en el departamento. Ganás peso político, pero te devorará horas de trámites y firmas.",
+        options: [
+          {
+            text: "Aceptar y meter los pies en la rosca de gestión",
+            consequenceText: "Manejás horarios, comisiones y presupuestos. Te convertís en una figura ineludible de los pasillos.",
+            effects: { capitalInstitucional: 22, sociabilidad: 10, bienestar: -12, capitalAcademico: -8 },
+            tag: "investigador"
+          },
+          {
+            text: "Rechazar: 'Mi lugar es la lectura y el aula'",
+            consequenceText: "Te salvás de reuniones interminables y disfrutás leer en silencio en la biblioteca central.",
+            effects: { bienestar: 14, capitalAcademico: 10, capitalInstitucional: -6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      columna_cultural: {
+        title: "Columna en suplemento cultural",
+        category: "oportunidad",
+        icon: "🎙️",
+        narrative: "Un prestigioso portal de noticias y revista cultural te propone escribir ensayos breves y reseñas quincenales.",
+        options: [
+          {
+            text: "Aceptar y cultivar la voz del intelectual público",
+            consequenceText: "Tus textos se leen y se debaten con furia en redes. Te invitan a presentar libros y podcasts.",
+            effects: { prestigio: 20, sociabilidad: 15, recursos: 10 },
+            tag: "critico"
+          },
+          {
+            text: "Declinar: la divulgación abarata la pureza teórica",
+            consequenceText: "Permanecés recluido en el circuito de los journals especializados donde solo te leen tus pares.",
+            effects: { capitalAcademico: 12, sociabilidad: -8 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      ia_humanidades: {
+        title: "El dilema de la inteligencia artificial",
+        category: "decision",
+        icon: "🤖",
+        narrative: "Tus estudiantes entregan ensayos redactados con modelos de lenguaje. Se debate si prohibirla con exámenes manuscritos o integrarla críticamente.",
+        options: [
+          {
+            text: "Integrar la IA para debates sobre lenguaje y poder",
+            consequenceText: "Tus clases se llenan de debates fascinantes sobre autoría, algoritmo, verdad y subjetividad.",
+            effects: { compromisoSocial: 16, sociabilidad: 12, capitalInstitucional: 8 },
+            tag: "docente"
+          },
+          {
+            text: "Exigir parciales manuscritos en hojas de oficio",
+            consequenceText: "Revivís el siglo XIX. Tus alumnos sufren calambres pero aprenden a hilar ideas bajo presión analógica.",
+            effects: { capitalAcademico: 10, sociabilidad: -6 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      agotamiento_existencial: {
+        title: "El fantasma del agotamiento académico",
+        category: "personal",
+        icon: "🧘",
+        narrative: "Son las 3 de la mañana de un martes. Tenés que corregir 45 informes, rendir subsidios y cerrar un capítulo de libro. Tu cuerpo pide auxilio.",
+        options: [
+          {
+            text: "Desconectar el teléfono y salir a caminar sin culpa",
+            consequenceText: "Redescubrís que la vida no se termina en la fecha de entrega de un informe de gestión.",
+            effects: { bienestar: 22, sociabilidad: 8, prestigio: -6 },
+            tag: "critico"
+          },
+          {
+            text: "Tomar otro café doble y cumplir con todo a tiempo",
+            consequenceText: "Entregaste todo al minuto límite. Tu foja está impecable, aunque tus ojeras ya tienen código postal.",
+            effects: { capitalInstitucional: 12, capitalAcademico: 8, bienestar: -18 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      extension_comunitaria: {
+        title: "Proyecto de extensión territorial",
+        category: "decision",
+        icon: "🌱",
+        narrative: "Se abre un programa de alfabetización y memoria oral en comedores comunitarios. Exige viajar tres veces por semana sin viáticos pagos.",
+        options: [
+          {
+            text: "Comprometerte a fondo con la extensión en el barrio",
+            consequenceText: "Comprobás que las humanidades transforman vidas reales por fuera de la burbuja universitaria.",
+            effects: { compromisoSocial: 24, sociabilidad: 14, recursos: -10 },
+            tag: "docente"
+          },
+          {
+            text: "Priorizar la redacción de tus papers de investigación",
+            consequenceText: "Publicás otro paper indexado, aunque sentís un sordo remordimiento social en el pecho.",
+            effects: { capitalAcademico: 14, prestigio: 10, compromisoSocial: -10 },
+            tag: "investigador"
+          }
+        ]
+      }
+    };
+
+    /**
+     * ========================================================================
+     * 4. LOS CUATRO DESENLACES PROFESIONALES (NARRATIVAS Y CRÓNICAS)
+     * ========================================================================
+     */
+    const CAREER_ENDINGS = {
+      investigador: {
+        id: "investigador",
+        title: "Investigador full-time",
+        subtitle: "Carrera del investigador científico (CONICET / IIGG - UBA)",
+        badge: "🔬",
+        narrative: `Lograste la cúspide del escalafón académico: sos investigador/a de carrera. Tu hábitat natural son los comités evaluadores, el formato APA, los formularios SIGEVA que nunca guardan a tiempo y los informes de memoria anual donde justificás cada resma de papel con rigurosidad filológica. Aunque tu salario se devalúa periódicamente frente a la inflación y pasás más horas redactando pedidos de subsidio que leyendo por placer, gozás del respeto reverencial de tus colegas y del derecho inalienable a corregir en voz alta la etimología de cualquier palabra en una cena familiar. Tu biblioteca rebasa el departamento y tu vida es un monumento al rigor intelectual y la burocracia perpetua.`,
+        achievements: "Publicaciones indexadas en revistas Q1, dirección de becarios doctorales, prestigio indiscutido en tu especialidad y reconocimiento internacional.",
+        contradictions: "Salario moderado, dependencia de subsidios estatales demorados, insomnio por dictámenes y poco tiempo para la vida extracadémica."
+      },
+
+      docente: {
+        id: "docente",
+        title: "Profesor de secundaria y terciario",
+        subtitle: "Pedagogía de trinchera, aulas vivas y compromiso social",
+        badge: "🎒",
+        narrative: `Elegiste el barro de las aulas reales y no lo cambiás por ningún congreso en Europa. Con una tiza en el bolsillo y una pila de 120 evaluaciones sobre la mesa del comedor, sos quien verdaderamente democratiza el pensamiento humanístico todos los días. Te sabés de memoria los nombres, las historias familiares y los dilemas de tres generaciones de estudiantes a los que les enseñaste a dudar de lo obvio. Lidiaste con goteras en el techo, paros docentes y fotocopias pagadas de tu bolsillo, pero la satisfacción humana cuando un alumno de quinto año te dice 'profe, gracias a usted entendí lo que quiero hacer con mi vida' supera con creces cualquier mención honorífica en un congreso.`,
+        achievements: "Vínculos humanos imborrables, impacto social directo, estabilidad en el estatuto docente y una vocación pedagógica a prueba de balas.",
+        contradictions: "Cansancio crónico en la voz, correcciones los fines de semana, sueldo que exige correr de una escuela a otra y escaso reconocimiento institucional."
+      },
+
+      critico: {
+        id: "critico",
+        title: "Crítico cultural y ensayista público",
+        subtitle: "Escritura autónoma, suplementos, medios y polémicas",
+        badge: "🎙️",
+        narrative: `Te convertiste en una voz ineludible del debate público y la escena cultural. Escribís ensayos incisivos en revistas independientes, coordinás talleres literarios donde se debate hasta la madrugada, publicás columnas que desatan debates furiosos en redes sociales y te invitan a moderar mesas en la Feria del Libro. Tu relación con la academia formal es de mutua seducción y distancia prudencial: ellos te envidian la soltura de la prosa y la llegada popular; vos les envidiás el recibo de sueldo regular a principio de mes. Vivís de adelantos editoriales irregulares, conferencias y colaboraciones periodísticas, pero tu autonomía de pensamiento es absoluta.`,
+        achievements: "Libertad intelectual total, presencia pública destacada, red de amistades estimulante y libros propios en vidrieras.",
+        contradictions: "Ingresos económicos fluctuantes, precariedad previsional, envidias de pasillo y el desgaste de estar siempre opinando sobre la última novedad."
+      },
+
+      tech_privado: {
+        id: "tech_privado",
+        title: "Estratega fuera del campo / sector tech",
+        subtitle: "De la hermenéutica a los OKR, el UX y la consultoría global",
+        badge: "💼",
+        narrative: `Rompiste el mandato endogámico de la facultad y descubriste que el rigor hermenéutico cotiza alto en el mercado corporativo y tecnológico. Hoy trabajás como Lead UX Writer, analista de contenidos o estratega en inteligencia artificial para empresas extranjeras, cobrando en dólares desde la comodidad de tu hogar. Tus compañeros de camada a veces te miran con una mezcla de sospecha ideológica y secreta envidia cuando los invitás a cenar y pagás la cuenta completa. Mirás tu ejemplar subrayado de Foucault en la biblioteca con una ternura irónica mientras optimizás prompts y liderás reuniones en inglés. Encontraste estabilidad material sin haber perdido la agudeza crítica que te dio Puán.`,
+        achievements: "Tranquilidad económica plena, equipamiento tecnológico de punta, viajes sin deudas y aplicación práctica de las humanidades en la economía moderna.",
+        contradictions: "Nostalgia por el debate teórico desinteresado, sensación de extranjería cultural frente a tus raíces y la inevitable paradoja de servir al gran capital."
+      }
+    };
+
+    /**
+     * ========================================================================
+     * 5. ESTADO GLOBAL DEL JUEGO
+     * ========================================================================
+     */
+    const GameState = {
+      player: {
+        name: "Lic. Sofía",
+        career: "Letras",
+        avatar: "📖",
+        archetype: "raton",
+        // Puntuaciones internas acumuladas (OCULTAS al jugador)
+        stats: {
+          recursos: 45,
+          capitalAcademico: 15,
+          capitalInstitucional: 15,
+          prestigio: 15,
+          compromisoSocial: 15,
+          bienestar: 75
+        },
+        currentTile: 0,
+        decisionHistory: [],
+        tagCounts: {
+          investigador: 0,
+          docente: 0,
+          critico: 0,
+          tech_privado: 0
+        }
+      },
+      isSpinning: false,
+      isModalOpen: false,
+      isGameOver: false,
+      currentRotationAngle: 0
+    };
+
+    /**
+     * ========================================================================
+     * 6. CONTROLADOR DE INTERFAZ Y RENDERIZADO
+     * ========================================================================
+     */
+    const UI = {
+      // Elementos DOM
+      boardSvg: document.getElementById("board-svg"),
+      tilesLayer: document.getElementById("board-tiles-layer"),
+      playerTokenGroup: document.getElementById("player-token-group"),
+      spinnerRotator: document.getElementById("spinner-rotator"),
+      spinnerPointer: document.getElementById("spinner-pointer"),
+      btnSpin: document.getElementById("btn-spin-wheel"),
+      hudSpinStatus: document.getElementById("hud-spin-status"),
+      hudAvatar: document.getElementById("hud-avatar"),
+      hudName: document.getElementById("hud-name"),
+      hudCareer: document.getElementById("hud-career"),
+      hudStageLabel: document.getElementById("hud-stage-label"),
+
+      // Indicadores Cualitativos
+      badgeEco: document.getElementById("badge-eco"),
+      meterEco: document.getElementById("meter-eco"),
+      badgeAnimo: document.getElementById("badge-animo"),
+      meterAnimo: document.getElementById("meter-animo"),
+      badgeInclinacion: document.getElementById("badge-inclinacion"),
+      chronicleList: document.getElementById("chronicle-list"),
+
+      // Modales
+      modalCreator: document.getElementById("modal-char-creator"),
+      modalEvent: document.getElementById("modal-card-event"),
+      modalEnding: document.getElementById("modal-ending"),
+      modalRules: document.getElementById("modal-rules"),
+      btnRulesToggle: document.getElementById("btn-rules-toggle"),
+      btnCloseRules: document.getElementById("btn-close-rules"),
+
+      // Modal Evento
+      eventHeader: document.getElementById("modal-event-header"),
+      eventIcon: document.getElementById("modal-event-icon"),
+      eventTitle: document.getElementById("modal-event-title"),
+      eventCategory: document.getElementById("modal-event-category"),
+      eventNarrative: document.getElementById("modal-event-narrative"),
+      eventOptions: document.getElementById("modal-event-options"),
+      eventFeedback: document.getElementById("modal-event-feedback"),
+      eventFooter: document.getElementById("modal-event-footer"),
+      btnEventContinue: document.getElementById("btn-modal-continue"),
+
+      // Modal Ending
+      endBadge: document.getElementById("end-badge"),
+      endTitle: document.getElementById("end-title"),
+      endSubtitle: document.getElementById("end-subtitle"),
+      endNarrative: document.getElementById("end-narrative"),
+      endBisagrasList: document.getElementById("end-bisagras-list"),
+      endAchievements: document.getElementById("end-achievements"),
+      endContradictions: document.getElementById("end-contradictions"),
+
+      // Toast
+      toast: document.getElementById("life-toast"),
+      toastText: document.getElementById("toast-text"),
+      toastIcon: document.getElementById("toast-icon"),
+
+      // Renderizar las 30 casillas como carreteras en el SVG
+      renderBoard() {
+        this.tilesLayer.innerHTML = "";
+        TILES.forEach((tile, index) => {
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("class", `tile-group tile-${tile.type}`);
+          g.setAttribute("id", `svg-tile-${index}`);
+          g.setAttribute("transform", `translate(${tile.x}, ${tile.y})`);
+
+          // Dimensiones de la casilla
+          const w = 54;
+          const h = 42;
+
+          // Marco / Placa de la casilla con borde 3D
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute("x", -w/2);
+          rect.setAttribute("y", -h/2);
+          rect.setAttribute("width", w);
+          rect.setAttribute("height", h);
+          rect.setAttribute("rx", "8");
+          rect.setAttribute("fill", tile.color);
+          rect.setAttribute("stroke", "#ffffff");
+          rect.setAttribute("stroke-width", "2.5");
+          rect.setAttribute("filter", "url(#road-shadow)");
+
+          // Número de casilla
+          const numText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          numText.setAttribute("x", -w/2 + 7);
+          numText.setAttribute("y", -h/2 + 11);
+          numText.setAttribute("fill", "#ffffff");
+          numText.setAttribute("font-size", "9");
+          numText.setAttribute("font-weight", "900");
+          numText.textContent = `#${index}`;
+
+          // Icono
+          const iconText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          iconText.setAttribute("x", w/2 - 9);
+          iconText.setAttribute("y", -h/2 + 12);
+          iconText.setAttribute("font-size", "11");
+          iconText.setAttribute("text-anchor", "middle");
+          iconText.textContent = tile.icon;
+
+          // Título de la casilla
+          const labelText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          labelText.setAttribute("x", 0);
+          labelText.setAttribute("y", 11);
+          labelText.setAttribute("fill", "#ffffff");
+          labelText.setAttribute("font-size", "8");
+          labelText.setAttribute("font-weight", "800");
+          labelText.setAttribute("text-anchor", "middle");
+          labelText.textContent = tile.title.length > 12 ? tile.title.slice(0, 11) + '..' : tile.title;
+
+          g.appendChild(rect);
+          g.appendChild(numText);
+          g.appendChild(iconText);
+          g.appendChild(labelText);
+
+          g.addEventListener("click", () => {
+            UI.showToast(`Casilla #${tile.id}: ${tile.title}`, tile.icon);
+          });
+
+          this.tilesLayer.appendChild(g);
+        });
+
+        this.updatePawnPosition(GameState.player.currentTile);
+      },
+
+      // Posicionar la ficha del jugador sobre la casilla
+      updatePawnPosition(tileIndex) {
+        const tile = TILES[tileIndex];
+        if (!tile) return;
+
+        // Desplazar visualmente la ficha hacia las coordenadas de la casilla
+        this.playerTokenGroup.setAttribute("transform", `translate(${tile.x}, ${tile.y - 12})`);
+
+        // Resaltar casilla activa
+        document.querySelectorAll(".tile-group").forEach((el, idx) => {
+          if (idx === tileIndex) el.classList.add("active-tile");
+          else el.classList.remove("active-tile");
+        });
+
+        // Etapa en barra superior
+        const stageNames = [
+          "Etapa 1: Ingreso a la Carrera",
+          "Etapa 2: Vida estudiantil",
+          "Etapa 3: Graduación y primeros pasos",
+          "Etapa 4: Posgrado e investigación",
+          "Etapa 5: Consolidación laboral",
+          "Etapa 6: Recta final y desenlace"
+        ];
+        this.hudStageLabel.textContent = stageNames[tile.stageId - 1] || "Carrera académica";
+      },
+
+      // Actualizar indicadores cualitativos (SIN NÚMEROS)
+      updateVitalStatus() {
+        const p = GameState.player;
+        const stats = p.stats;
+
+        this.hudName.textContent = p.name;
+        this.hudCareer.textContent = p.career;
+        this.hudAvatar.textContent = p.avatar;
+
+        // 1. Economía cualitativa
+        let ecoBadgeClass = "badge-eco-estable";
+        let ecoText = "Estable";
+        let ecoPercent = Math.min(Math.max((stats.recursos / 100) * 100, 5), 100);
+        let ecoColor = "#38bdf8";
+
+        if (stats.recursos >= 70) {
+          ecoBadgeClass = "badge-eco-holgada";
+          ecoText = "Holgada";
+          ecoColor = "#22c55e";
+        } else if (stats.recursos >= 35) {
+          ecoBadgeClass = "badge-eco-estable";
+          ecoText = "Estable";
+          ecoColor = "#0284c7";
+        } else if (stats.recursos > 0) {
+          ecoBadgeClass = "badge-eco-ajustada";
+          ecoText = "Ajustada";
+          ecoColor = "#f59e0b";
+        } else {
+          ecoBadgeClass = "badge-eco-precaria";
+          ecoText = "En la lona";
+          ecoColor = "#ef4444";
+          ecoPercent = 5;
+        }
+
+        this.badgeEco.className = `status-badge ${ecoBadgeClass}`;
+        this.badgeEco.textContent = ecoText;
+        this.meterEco.style.width = `${ecoPercent}%`;
+        this.meterEco.style.backgroundColor = ecoColor;
+
+        // 2. Ánimo y energía cualitativo
+        let animoBadgeClass = "badge-animo-bueno";
+        let animoText = "Con energía";
+        let animoColor = "#10b981";
+
+        if (stats.bienestar >= 75) {
+          animoBadgeClass = "badge-animo-pleno";
+          animoText = "Pleno y motivado";
+          animoColor = "#10b981";
+        } else if (stats.bienestar >= 45) {
+          animoBadgeClass = "badge-animo-bueno";
+          animoText = "Con energía";
+          animoColor = "#0284c7";
+        } else if (stats.bienestar >= 25) {
+          animoBadgeClass = "badge-animo-estres";
+          animoText = "Estresado";
+          animoColor = "#f59e0b";
+        } else {
+          animoBadgeClass = "badge-animo-burnout";
+          animoText = "Al borde del colapso";
+          animoColor = "#ef4444";
+        }
+
+        this.badgeAnimo.className = `status-badge ${animoBadgeClass}`;
+        this.badgeAnimo.textContent = animoText;
+        this.meterAnimo.style.width = `${Math.min(Math.max(stats.bienestar, 5), 100)}%`;
+        this.meterAnimo.style.backgroundColor = animoColor;
+
+        // 3. Inclinación vocacional dinámica
+        const tags = p.tagCounts;
+        let leadTag = "equilibrado";
+        let maxT = -1;
+        for (const [k, v] of Object.entries(tags)) {
+          if (v > maxT) { maxT = v; leadTag = k; }
+        }
+
+        const tagLabels = {
+          investigador: "Enfoque: Investigación y claustro",
+          docente: "Enfoque: Vocación y compromiso pedagógico",
+          critico: "Enfoque: Crítica cultural y ensayo",
+          tech_privado: "Enfoque: Sector privado y nuevas tecnologías",
+          equilibrado: "Exploración vocacional en Puán"
+        };
+        this.badgeInclinacion.textContent = tagLabels[leadTag] || "Exploración en Puán";
+      },
+
+      addChronicle(text) {
+        const div = document.createElement("div");
+        div.className = "chronicle-entry";
+        div.textContent = text;
+        this.chronicleList.prepend(div);
+      },
+
+      showToast(text, icon = "⚡") {
+        this.toastText.textContent = text;
+        this.toastIcon.textContent = icon;
+        this.toast.classList.add("show");
+        setTimeout(() => {
+          this.toast.classList.remove("show");
+        }, 2800);
+      }
+    };
+
+    /**
+     * ========================================================================
+     * 7. MOTOR Y LÓGICA DEL JUEGO CON LA RULETA
+     * ========================================================================
+     */
+    const GameEngine = {
+      init() {
+        this.setupEventListeners();
+        CharCreator.init();
+        UI.renderBoard();
+        UI.updateVitalStatus();
+      },
+
+      setupEventListeners() {
+        // Giro de la Ruleta (desde botón del HUD o clic directo en la Ruleta SVG)
+        UI.btnSpin.addEventListener("click", () => this.handleSpinWheel());
+        document.getElementById("central-spinner-group").addEventListener("click", () => this.handleSpinWheel());
+
+        // Modal de reglas
+        UI.btnRulesToggle.addEventListener("click", () => UI.modalRules.classList.add("active"));
+        UI.btnCloseRules.addEventListener("click", () => UI.modalRules.classList.remove("active"));
+
+        // Sonido
+        document.getElementById("btn-sound-toggle").addEventListener("click", () => {
+          const on = AudioEngine.toggle();
+          document.getElementById("sound-icon").textContent = on ? "🔊" : "🔇";
+          UI.showToast(on ? "Sonido activado" : "Sonido silenciado", on ? "🔊" : "🔇");
+        });
+
+        // Reiniciar
+        document.getElementById("btn-restart").addEventListener("click", () => {
+          if (confirm("¿Querés comenzar una nueva trayectoria académica desde el CBC?")) {
+            this.restartGame();
+          }
+        });
+
+        // Continuar en modal
+        UI.btnEventContinue.addEventListener("click", () => this.closeCardModal());
+
+        // Jugar de nuevo
+        document.getElementById("btn-play-again").addEventListener("click", () => {
+          UI.modalEnding.classList.remove("active");
+          this.restartGame();
+        });
+      },
+
+      restartGame() {
+        GameState.player.currentTile = 0;
+        GameState.player.decisionHistory = [];
+        GameState.player.tagCounts = { investigador: 0, docente: 0, critico: 0, tech_privado: 0 };
+        GameState.isGameOver = false;
+        GameState.isSpinning = false;
+        GameState.isModalOpen = false;
+
+        UI.modalEnding.classList.remove("active");
+        UI.modalEvent.classList.remove("active");
+        UI.modalCreator.classList.add("active");
+        UI.updatePawnPosition(0);
+        UI.updateVitalStatus();
+      },
+
+      // FÍSICA Y GIRO DE LA RULETA DE "EL JUEGO DE LA VIDA"
+      handleSpinWheel() {
+        if (GameState.isSpinning || GameState.isModalOpen || GameState.isGameOver) return;
+
+        GameState.isSpinning = true;
+        UI.btnSpin.disabled = true;
+        UI.hudSpinStatus.textContent = "¡Girando la ruleta...";
+
+        // Número aleatorio a obtener entre 1 y 10 (los 10 casilleros de la ruleta)
+        const spinResult = Math.floor(Math.random() * 10) + 1;
+
+        // Cada sector mide 36 grados. Para que el sector N caiga exactamente bajo la aguja superior (12 en punto):
+        // Sector N tiene su centro en (N - 1) * 36 + 18 grados.
+        const targetSectorAngle = 360 - ((spinResult - 1) * 36 + 18);
+
+        // Rotación acumulada (4 vueltas completas de 360 deg + ángulo exacto del casillero)
+        const totalRevolutions = 360 * 4;
+        const currentMod = GameState.currentRotationAngle % 360;
+        let delta = targetSectorAngle - currentMod;
+        if (delta < 0) delta += 360;
+        const finalAngle = GameState.currentRotationAngle + totalRevolutions + delta;
+        GameState.currentRotationAngle = finalAngle;
+
+        // Animar rotador SVG
+        UI.spinnerRotator.style.transform = `rotate(${finalAngle}deg)`;
+
+        // Sonido de tics de la aguja mientras gira
+        let tickInterval = 60;
+        let tickTimer = 0;
+        const totalTicks = 32;
+        for (let i = 0; i < totalTicks; i++) {
+          setTimeout(() => {
+            AudioEngine.playTick();
+            // Leve vibración visual del puntero
+            UI.spinnerPointer.style.transform = i % 2 === 0 ? "rotate(10deg)" : "rotate(-6deg)";
+          }, tickTimer);
+          tickTimer += tickInterval;
+          tickInterval += 7; // desaceleración progresiva
+        }
+
+        // Al detenerse la ruleta
+        setTimeout(() => {
+          UI.spinnerPointer.style.transform = "rotate(0deg)";
+          this.finishSpin(spinResult);
+        }, 2900);
+      },
+
+      finishSpin(result) {
+        UI.hudSpinStatus.textContent = `¡La ruleta marcó ${result}! Avanzando...`;
+        UI.showToast(`¡Sacaste ${result} en la ruleta!`, "🎡");
+
+        // Determinar destino teniendo en cuenta las CASILLAS DE STOP OBLIGATORIO
+        let current = GameState.player.currentTile;
+        let stepsToMove = result;
+        let targetTileIndex = current;
+
+        for (let s = 1; s <= stepsToMove; s++) {
+          const next = current + s;
+          if (next >= TILES.length - 1) {
+            targetTileIndex = TILES.length - 1;
+            break;
+          }
+          targetTileIndex = next;
+          // Si es una casilla con STOP OBLIGATORIO (Monografía #10 o Concurso #20), se frena allí
+          if (TILES[next].isStop) {
+            targetTileIndex = next;
+            break;
+          }
+        }
+
+        // Mover ficha paso a paso
+        this.stepPawnSequence(current, targetTileIndex);
+      },
+
+      stepPawnSequence(current, target) {
+        if (current >= target) {
+          GameState.isSpinning = false;
+          UI.btnSpin.disabled = false;
+          this.onLandTile(target);
+          return;
+        }
+
+        setTimeout(() => {
+          const next = current + 1;
+          GameState.player.currentTile = next;
+          UI.updatePawnPosition(next);
+          AudioEngine.playStep();
+          this.stepPawnSequence(next, target);
+        }, 240);
+      },
+
+      onLandTile(tileIndex) {
+        const tile = TILES[tileIndex];
+        UI.addChronicle(`Avanzaste a casilla #${tile.id}: ${tile.title}.`);
+
+        // Meta final
+        if (tileIndex === TILES.length - 1) {
+          setTimeout(() => this.triggerEndGame(), 600);
+          return;
+        }
+
+        // Casilla de cobro o acontecimiento automático
+        if (tile.isAuto) {
+          if (tile.autoBonus) {
+            this.applyHiddenStats(tile.autoBonus);
+          }
+          if (tile.type === "cobro") {
+            AudioEngine.playPayDay();
+            UI.showToast(tile.autoText, "💵");
+          } else {
+            UI.showToast(tile.autoText, tile.icon);
+          }
+          UI.addChronicle(tile.autoText);
+          return;
+        }
+
+        // Casilla con tarjeta de dilema o decisión
+        if (tile.cardKey && CARDS[tile.cardKey]) {
+          setTimeout(() => this.openCardModal(CARDS[tile.cardKey], tile), 400);
+        }
+      },
+
+      openCardModal(card, tile) {
+        GameState.isModalOpen = true;
+        UI.btnSpin.disabled = true;
+
+        UI.eventHeader.className = `modal-header ${tile.type}`;
+        UI.eventIcon.textContent = tile.icon;
+        UI.eventTitle.textContent = card.title;
+        const catMap = { decision: "decisión", oportunidad: "oportunidad", crisis: "crisis", personal: "vida personal", evento: "evento universitario", avance: "avance académico" };
+        UI.eventCategory.textContent = tile.isStop ? "🛑 Parada obligatoria" : ("Tarjeta de " + (catMap[card.category] || card.category));
+        UI.eventNarrative.textContent = card.narrative;
+        UI.eventFeedback.style.display = "none";
+        UI.eventFooter.style.display = "none";
+
+        // Renderizar opciones A y B sin mostrar números
+        UI.eventOptions.innerHTML = "";
+        card.options.forEach((opt, idx) => {
+          const letter = idx === 0 ? "A" : "B";
+          const btn = document.createElement("div");
+          btn.className = "btn-option";
+          btn.innerHTML = `
+            <div class="option-title">
+              <span class="option-letter">${letter}</span>
+              <span>${opt.text}</span>
+            </div>
+            <div class="option-consequence-narrative">
+              ${opt.consequenceText}
+            </div>
+          `;
+
+          btn.addEventListener("click", () => {
+            this.handlePlayerDecision(card, opt, letter);
+          });
+
+          UI.eventOptions.appendChild(btn);
+        });
+
+        UI.modalEvent.classList.add("active");
+        AudioEngine.playCard();
+      },
+
+      handlePlayerDecision(card, option, letter) {
+        const buttons = UI.eventOptions.querySelectorAll(".btn-option");
+        buttons.forEach(b => b.style.pointerEvents = "none");
+
+        // Aplicar consecuencias numéricas internas (ocultas al usuario)
+        this.applyHiddenStats(option.effects);
+
+        // Registrar en historial para la crónica final
+        GameState.player.decisionHistory.push({
+          cardTitle: card.title,
+          choiceText: option.text,
+          letter: letter,
+          tag: option.tag,
+          explanation: option.consequenceText
+        });
+
+        if (option.tag && GameState.player.tagCounts[option.tag] !== undefined) {
+          GameState.player.tagCounts[option.tag]++;
+        }
+
+        // Actualizar estados cualitativos
+        UI.updateVitalStatus();
+
+        // Mostrar resultado narrativo
+        UI.eventFeedback.style.display = "block";
+        UI.eventFeedback.innerHTML = `<strong>Resolución:</strong> ${option.consequenceText}`;
+        UI.eventFooter.style.display = "flex";
+
+        if (option.effects.bienestar && option.effects.bienestar < -10) {
+          AudioEngine.playCrisis();
+        }
+
+        UI.addChronicle(`Decisión en "${card.title}": Opción ${letter} (${option.text}).`);
+      },
+
+      applyHiddenStats(effects) {
+        const stats = GameState.player.stats;
+        for (const [k, v] of Object.entries(effects)) {
+          if (stats[k] !== undefined) {
+            stats[k] += v;
+            if (k === 'bienestar') stats[k] = Math.min(Math.max(stats[k], 5), 100);
+            if (k === 'recursos') stats[k] = Math.max(stats[k], 0);
+          }
+        }
+
+        // Alerta de precariedad si los recursos caen a cero
+        if (stats.recursos <= 0) {
+          UI.showToast("⚠️ Modo precariedad: almorzás mate y galletitas en el patio. ¡Seguís adelante!", "☕");
+          stats.bienestar = Math.max(stats.bienestar - 4, 5);
+        }
+
+        UI.updateVitalStatus();
+      },
+
+      closeCardModal() {
+        UI.modalEvent.classList.remove("active");
+        GameState.isModalOpen = false;
+        UI.btnSpin.disabled = false;
+        UI.hudSpinStatus.textContent = "Podés volver a girar la ruleta";
+      },
+
+      // DETERMINAR DESTINO PROFESIONAL FINAL
+      triggerEndGame() {
+        GameState.isGameOver = true;
+        UI.btnSpin.disabled = true;
+        UI.hudSpinStatus.textContent = "¡Partida completada!";
+
+        const p = GameState.player;
+        const stats = p.stats;
+        const tags = p.tagCounts;
+
+        // Fórmula heurística acumulada
+        const scores = {
+          investigador: (stats.capitalAcademico * 1.6) + (stats.prestigio * 1.3) + (stats.capitalInstitucional * 0.9) + (tags.investigador * 14),
+          docente: (stats.compromisoSocial * 1.7) + (stats.bienestar * 0.8) + (tags.docente * 16) - (tags.tech_privado * 4),
+          critico: (stats.prestigio * 1.6) + (stats.capitalAcademico * 0.8) + (tags.critico * 15) + Math.max(0, (50 - stats.capitalInstitucional) * 0.4),
+          tech_privado: (stats.recursos * 1.7) + (tags.tech_privado * 18) - (stats.capitalAcademico * 0.3)
+        };
+
+        let bestCareer = "investigador";
+        let maxS = -Infinity;
+        for (const [k, val] of Object.entries(scores)) {
+          if (val > maxS) {
+            maxS = val;
+            bestCareer = k;
+          }
+        }
+
+        const career = CAREER_ENDINGS[bestCareer];
+
+        // Renderizar modal final
+        UI.endBadge.textContent = career.badge;
+        UI.endTitle.textContent = career.title;
+        UI.endSubtitle.textContent = career.subtitle;
+        UI.endNarrative.textContent = career.narrative;
+
+        // Tres decisiones bisagra de la partida
+        UI.endBisagrasList.innerHTML = "";
+        const sampleDecisions = p.decisionHistory.slice(-3);
+        sampleDecisions.forEach(d => {
+          const div = document.createElement("div");
+          div.className = "bisagra-item";
+          div.innerHTML = `
+            <div class="bisagra-title">📌 ${d.cardTitle}</div>
+            <div class="bisagra-choice">Elegiste: <em>${d.choiceText}</em>. (${d.explanation})</div>
+          `;
+          UI.endBisagrasList.appendChild(div);
+        });
+
+        UI.endAchievements.textContent = career.achievements;
+        UI.endContradictions.textContent = career.contradictions;
+
+        UI.modalEnding.classList.add("active");
+        AudioEngine.playPayDay();
+      }
+    };
+
+    /**
+     * ========================================================================
+     * 8. SELECCIÓN DE ARQUETIPO INICIAL NARRATIVO
+     * ========================================================================
+     */
+    const CharCreator = {
+      selectedArchetype: "raton",
+
+      init() {
+        const cards = document.querySelectorAll(".archetype-card");
+        cards.forEach(card => {
+          card.addEventListener("click", () => {
+            cards.forEach(c => c.classList.remove("selected"));
+            card.classList.add("selected");
+            this.selectedArchetype = card.dataset.archetype;
+          });
+        });
+
+        document.getElementById("btn-start-game").addEventListener("click", () => {
+          const nameInput = document.getElementById("char-name").value.trim() || "Estudiante de Puán";
+          const careerSelect = document.getElementById("char-career").value;
+
+          GameState.player.name = nameInput;
+          GameState.player.career = careerSelect;
+          GameState.player.archetype = this.selectedArchetype;
+
+          // Asignar stats iniciales según arquetipo (ocultos al jugador)
+          if (this.selectedArchetype === "raton") {
+            GameState.player.stats.capitalAcademico = 25;
+            GameState.player.stats.recursos = 30;
+            GameState.player.stats.bienestar = 70;
+            GameState.player.tagCounts.investigador = 1;
+          } else if (this.selectedArchetype === "rosquero") {
+            GameState.player.stats.capitalInstitucional = 22;
+            GameState.player.stats.compromisoSocial = 20;
+            GameState.player.stats.recursos = 35;
+            GameState.player.tagCounts.docente = 1;
+          } else if (this.selectedArchetype === "laburante") {
+            GameState.player.stats.recursos = 60;
+            GameState.player.stats.capitalAcademico = 10;
+            GameState.player.stats.bienestar = 65;
+            GameState.player.tagCounts.tech_privado = 1;
+          } else {
+            // Equilibrado
+            GameState.player.stats.recursos = 45;
+            GameState.player.stats.capitalAcademico = 15;
+            GameState.player.stats.bienestar = 75;
+          }
+
+          const avatarsByCareer = {
+            "Letras": "📖",
+            "Filosofía": "🦉",
+            "Historia": "📜",
+            "Artes": "🎨",
+            "Ciencias Antropológicas": "🦴",
+            "Geografía": "🗺️",
+            "Edición": "🖋️",
+            "Ciencias de la Educación": "✏️"
+          };
+          GameState.player.avatar = avatarsByCareer[careerSelect] || "🎓";
+
+          UI.modalCreator.classList.remove("active");
+          UI.updateVitalStatus();
+          UI.addChronicle(`Iniciaste tu carrera de ${careerSelect} con el perfil de ${document.querySelector('.archetype-card.selected .archetype-header').textContent}.`);
+          UI.showToast("¡Bienvenido/a al campus de Puán!", "🎓");
+        });
+      }
+    };
+
+    // Inicializar al cargar
+    window.addEventListener("DOMContentLoaded", () => {
+      GameEngine.init();
+    });
+  </script>
+</body>
+</html>
