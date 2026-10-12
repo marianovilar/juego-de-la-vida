@@ -884,7 +884,7 @@
             <span>🗺️ El recorrido de Puán</span>
           </div>
           <div class="current-stage-tag" id="hud-stage-label">
-            Etapa 1: Ingreso a la carrera
+            Parte 1: Ingresante
           </div>
         </div>
 
@@ -1193,7 +1193,7 @@
         <p>Al caer o pasar por las casillas de <strong>Día de cobro (beca/sueldo)</strong>, tus finanzas reciben un respiro. Si tus recursos llegan a cero, entrás en <em>modo precariedad</em>: tu bienestar se resiente, ¡pero la vocación resiste!</p>
 
         <h4 style="margin-top: 10px; color: #1e3a8a;">🏆 Los cuatro destinos profesionales:</h4>
-        <p>Al llegar a la última casilla, el sistema revela cuál de las cuatro trayectorias has construido: <strong>Investigador full-time</strong>, <strong>Profesor de secundaria/terciario</strong>, <strong>Crítico cultural</strong> o <strong>Estratega fuera del campo / sector tech</strong>.</p>
+        <p>Al llegar a la última casilla y completar las materias, el sistema revela cuál de las cuatro trayectorias has construido al graduarte: <strong>Perfil académico y claustro</strong>, <strong>Vocación docente y trinchera</strong>, <strong>Creador/a y agitador/a cultural</strong> o <strong>Pragmático/a fuera del claustro</strong>.</p>
       </div>
       <div class="modal-footer">
         <button class="btn-primary" id="btn-close-rules">¡Entendido!</button>
@@ -1215,8 +1215,8 @@
         
         <div class="ending-hero">
           <div class="ending-badge" id="end-badge">🔬</div>
-          <div class="ending-title" id="end-title">Investigador full-time</div>
-          <div class="ending-subtitle" id="end-subtitle">Carrera del investigador científico (CONICET / UBA)</div>
+          <div class="ending-title" id="end-title">Graduado/a con perfil académico y claustro</div>
+          <div class="ending-subtitle" id="end-subtitle">Adscripción consolidada, ayudantía de cátedra y postulación a beca doctoral</div>
         </div>
 
         <div class="ending-narrative" id="end-narrative">
@@ -1378,47 +1378,41 @@
      * ========================================================================
      */
     const TILES = [
-      // ETAPA 1: INGRESO
-      { id: 0, x: 90, y: 720, title: "Puán 480", type: "inicio", icon: "🏛️", stageId: 1, color: "#eab308", isAuto: true, autoText: "¡Primer paso en Puán! El viaje ha comenzado." },
-      { id: 1, x: 90, y: 600, title: "Teórico a las 8", type: "personal", icon: "☕", stageId: 1, color: "#f59e0b", cardKey: "teorico_madrugada" },
+      // PARTE 1: INGRESANTE (PRIMER 30% DE LA CARRERA)
+      { id: 0, x: 90, y: 720, title: "Puán 480", type: "inicio", icon: "🏛️", stageId: 1, color: "#eab308", isAuto: true, autoText: "¡Primer paso en Puán! Empieza tu carrera de grado en Filosofía y Letras." },
+      { id: 1, x: 90, y: 600, title: "Teórico a las 8", type: "personal", icon: "☕", stageId: 1, color: "#f59e0b", cardKey: "teorico_ingreso" },
       { id: 2, x: 90, y: 480, title: "Fotocopiadora", type: "decision", icon: "📑", stageId: 1, color: "#f97316", cardKey: "cola_fotocopiadora" },
       { id: 3, x: 90, y: 360, title: "Grupo de estudio", type: "oportunidad", icon: "🤝", stageId: 1, color: "#9333ea", cardKey: "grupo_estudio" },
       { id: 4, x: 120, y: 240, title: "Asamblea en el patio", type: "evento", icon: "📢", stageId: 1, color: "#0284c7", cardKey: "asamblea_estudiantil" },
+      { id: 5, x: 210, y: 150, title: "SIU Guaraní", type: "crisis", icon: "💻", stageId: 1, color: "#ef4444", cardKey: "siu_guarani" },
+      { id: 6, x: 330, y: 100, title: "Comisión de prácticos", type: "decision", icon: "📝", stageId: 1, color: "#f97316", cardKey: "comision_practico" },
+      { id: 7, x: 460, y: 90, title: "Primer final oral", type: "avance", icon: "📚", stageId: 1, color: "#06b6d4", cardKey: "primer_final_oral" },
+      { id: 8, x: 590, y: 90, title: "Bar de Puán", type: "personal", icon: "🍻", stageId: 1, color: "#f59e0b", cardKey: "bar_de_puan" },
+      { id: 9, x: 720, y: 100, title: "Jornadas de ingreso", type: "oportunidad", icon: "🎤", stageId: 1, color: "#9333ea", cardKey: "jornadas_estudiantes" },
 
-      // ETAPA 2: VIDA ESTUDIANTIL
-      { id: 5, x: 210, y: 150, title: "SIU Guaraní", type: "crisis", icon: "💻", stageId: 2, color: "#ef4444", cardKey: "siu_guarani" },
-      { id: 6, x: 330, y: 100, title: "Ayudantía de cátedra", type: "decision", icon: "👨‍🏫", stageId: 2, color: "#f97316", cardKey: "ayudantia_ad_honorem" },
-      { id: 7, x: 460, y: 90, title: "Final oral filtro", type: "avance", icon: "📚", stageId: 2, color: "#06b6d4", cardKey: "materia_filtro" },
-      { id: 8, x: 590, y: 90, title: "Bar de Puán", type: "personal", icon: "🍻", stageId: 2, color: "#f59e0b", cardKey: "bar_de_puan" },
-      { id: 9, x: 720, y: 100, title: "Jornadas de jóvenes", type: "oportunidad", icon: "🎤", stageId: 2, color: "#9333ea", cardKey: "jornadas_jovenes" },
+      // PARTE 2: PARTE MEDIA DE LA CARRERA
+      { id: 10, x: 850, y: 140, title: "Parada: contacto con cátedra", type: "parada", icon: "🛑", stageId: 2, color: "#b91c1c", isStop: true, cardKey: "contacto_catedra" },
+      { id: 11, x: 960, y: 210, title: "Monografía de parcial", type: "decision", icon: "📄", stageId: 2, color: "#f97316", cardKey: "monografia_parcial" },
+      { id: 12, x: 1000, y: 320, title: "La novela secreta", type: "personal", icon: "✍️", stageId: 2, color: "#f59e0b", cardKey: "novela_secreta" },
+      { id: 13, x: 1000, y: 440, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 2, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Cobrás la beca de ayuda económica o tus changas estudiantiles.", autoBonus: { recursos: 25, bienestar: 6 } },
+      { id: 14, x: 990, y: 560, title: "Colectivo artístico", type: "oportunidad", icon: "🎭", stageId: 2, color: "#9333ea", cardKey: "colectivo_artistico" },
+      { id: 15, x: 940, y: 670, title: "Fanzine y revista", type: "decision", icon: "🗞️", stageId: 2, color: "#f97316", cardKey: "revista_fanzine" },
+      { id: 16, x: 830, y: 720, title: "Crisis vocacional", type: "crisis", icon: "⚡", stageId: 2, color: "#ef4444", cardKey: "crisis_mitad_carrera" },
+      { id: 17, x: 700, y: 730, title: "Coloquio estudiantil", type: "oportunidad", icon: "🎙️", stageId: 2, color: "#9333ea", cardKey: "coloquio_avanzados" },
+      { id: 18, x: 410, y: 730, title: "Trabajo de archivo", type: "decision", icon: "🏛️", stageId: 2, color: "#f97316", cardKey: "trabajo_archivo" },
+      { id: 19, x: 290, y: 710, title: "Junta departamental", type: "evento", icon: "👥", stageId: 2, color: "#0284c7", cardKey: "comision_carrera" },
 
-      // ETAPA 3: GRADUACIÓN Y PRIMERAS DECISIONES LABORALES
-      { id: 10, x: 850, y: 140, title: "Parada: monografía", type: "parada", icon: "🛑", stageId: 3, color: "#b91c1c", isStop: true, cardKey: "monografia_seminario" },
-      { id: 11, x: 960, y: 210, title: "Graduación", type: "personal", icon: "🎉", stageId: 3, color: "#f59e0b", cardKey: "fiesta_graduacion" },
-      { id: 12, x: 1000, y: 320, title: "Horas en secundaria", type: "decision", icon: "🎒", stageId: 3, color: "#f97316", cardKey: "horas_escuela" },
-      { id: 13, x: 1000, y: 440, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 3, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Cobrás tus honorarios y tus finanzas respiran.", autoBonus: { recursos: 25, bienestar: 6 } },
-      { id: 14, x: 990, y: 560, title: "Bolsa de becas", type: "oportunidad", icon: "🌟", stageId: 3, color: "#9333ea", cardKey: "convocatoria_becas" },
-
-      // ETAPA 4: POSGRADO E INVESTIGACIÓN
-      { id: 15, x: 940, y: 670, title: "Beca doctoral", type: "decision", icon: "🔬", stageId: 4, color: "#f97316", cardKey: "beca_doctoral" },
-      { id: 16, x: 830, y: 720, title: "Congreso en Lisboa", type: "decision", icon: "✈️", stageId: 4, color: "#f97316", cardKey: "congreso_internacional" },
-      { id: 17, x: 700, y: 730, title: "Crisis de alquiler", type: "crisis", icon: "🏠", stageId: 4, color: "#ef4444", cardKey: "crisis_alquiler" },
-      { id: 18, x: 410, y: 730, title: "Artículo Q1", type: "decision", icon: "📰", stageId: 4, color: "#f97316", cardKey: "articulo_oportuno" },
-      { id: 19, x: 290, y: 710, title: "Dictaminador 2", type: "crisis", icon: "⚡", stageId: 4, color: "#ef4444", cardKey: "dictaminador_dos" },
-
-      // ETAPA 5: CONSOLIDACIÓN LABORAL
-      { id: 20, x: 200, y: 620, title: "Parada: concurso", type: "parada", icon: "🛑", stageId: 5, color: "#b91c1c", isStop: true, cardKey: "concurso_docente" },
-      { id: 21, x: 210, y: 490, title: "Oferta tech", type: "decision", icon: "💼", stageId: 5, color: "#f97316", cardKey: "oferta_privado" },
-      { id: 22, x: 240, y: 370, title: "Cargo de gestión", type: "decision", icon: "🗄️", stageId: 5, color: "#f97316", cardKey: "cargo_gestion" },
-      { id: 23, x: 340, y: 290, title: "Columna cultural", type: "oportunidad", icon: "🎙️", stageId: 5, color: "#9333ea", cardKey: "columna_cultural" },
-      { id: 24, x: 470, y: 240, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 5, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Ingresan sueldos de cátedra y becas de investigación.", autoBonus: { recursos: 30, bienestar: 8 } },
-
-      // ETAPA 6: RECTA FINAL Y DESENLACE
-      { id: 25, x: 620, y: 240, title: "Debate sobre IA", type: "decision", icon: "🤖", stageId: 6, color: "#f97316", cardKey: "ia_humanidades" },
-      { id: 26, x: 750, y: 280, title: "Agotamiento total", type: "personal", icon: "🧘", stageId: 6, color: "#f59e0b", cardKey: "agotamiento_existencial" },
-      { id: 27, x: 820, y: 370, title: "Extensión barrial", type: "decision", icon: "🌱", stageId: 6, color: "#f97316", cardKey: "extension_comunitaria" },
-      { id: 28, x: 800, y: 490, title: "Última firma", type: "avance", icon: "🖋️", stageId: 6, color: "#06b6d4", isAuto: true, autoText: "¡Última firma oficial completada! Tu expediente está listo.", autoBonus: { capitalAcademico: 12, prestigio: 10 } },
-      { id: 29, x: 740, y: 600, title: "Meta final", type: "final", icon: "🏆", stageId: 6, color: "#be185d", isAuto: true, autoText: "¡Llegaste a la meta! Descubriendo tu destino profesional..." }
+      // PARTE 3: PARTE FINAL DE LA CARRERA
+      { id: 20, x: 200, y: 620, title: "Parada: ayudantía de segunda", type: "parada", icon: "🛑", stageId: 3, color: "#b91c1c", isStop: true, cardKey: "ayudantia_segunda" },
+      { id: 21, x: 210, y: 490, title: "Horas en secundaria", type: "decision", icon: "🎒", stageId: 3, color: "#f97316", cardKey: "horas_escuela" },
+      { id: 22, x: 240, y: 370, title: "Adscripción formal", type: "oportunidad", icon: "📑", stageId: 3, color: "#9333ea", cardKey: "adscripcion_formal" },
+      { id: 23, x: 340, y: 290, title: "Trabajo editorial", type: "decision", icon: "💼", stageId: 3, color: "#f97316", cardKey: "trabajo_redaccion" },
+      { id: 24, x: 470, y: 240, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 3, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Ingresan tus honorarios docentes y colaboraciones.", autoBonus: { recursos: 30, bienestar: 8 } },
+      { id: 25, x: 620, y: 240, title: "Seminario temático", type: "decision", icon: "📖", stageId: 3, color: "#f97316", cardKey: "seminario_investigacion" },
+      { id: 26, x: 750, y: 280, title: "Agotamiento final", type: "personal", icon: "🧘", stageId: 3, color: "#f59e0b", cardKey: "agotamiento_final" },
+      { id: 27, x: 820, y: 370, title: "Extensión barrial", type: "oportunidad", icon: "🌱", stageId: 3, color: "#9333ea", cardKey: "extension_universitaria" },
+      { id: 28, x: 800, y: 490, title: "Última monografía", type: "avance", icon: "🎓", stageId: 3, color: "#06b6d4", cardKey: "monografia_seminario" },
+      { id: 29, x: 740, y: 600, title: "Graduación en Puán", type: "final", icon: "🏆", stageId: 3, color: "#be185d", isAuto: true, autoText: "¡Llegaste a la meta! Terminaste todas las materias de la carrera. ¡Sos graduado/a de Puán!" }
     ];
 
     /**
@@ -1427,22 +1421,23 @@
      * ========================================================================
      */
     const CARDS = {
-      teorico_madrugada: {
-        title: "Teórico de las 8 en el aula 108",
+      // --- PARTE 1: INGRESANTE ---
+      teorico_ingreso: {
+        title: "Teórico de las 8 en el aula magna",
         category: "personal",
         icon: "☕",
-        narrative: "Tu cátedra de cabecera puso las clases teóricas de madrugada en pleno invierno. Podés madrugar religiosamente para sentarte en primera fila o estudiar con desgrabaciones y dormir dos horas más.",
+        narrative: "Tu primera materia troncal puso los teóricos a las 8 de la mañana en pleno invierno. Podés madrugar religiosamente para sentarte en primera fila o estudiar con desgrabaciones y descansar dos horas más.",
         options: [
           {
             text: "Madrugar y sentarse en primera fila",
-            consequenceText: "El titular te memoriza la cara y dominás la bibliografía, a costa de vivir con cansancio y café amargo.",
-            effects: { capitalAcademico: 8, prestigio: 5, bienestar: -10 },
+            consequenceText: "El docente te reconoce la cara y dominás la bibliografía, a costa de vivir con cansancio y café amargo.",
+            effects: { capitalAcademico: 8, prestigio: 5, bienestar: -8 },
             tag: "investigador"
           },
           {
-            text: "Dormir y comprar las desgrabaciones",
+            text: "Dormir y estudiar con desgrabaciones",
             consequenceText: "Cuidás tu salud mental y hacés amigos en la fotocopiadora, aunque gastás dinero de tu bolsillo.",
-            effects: { bienestar: 12, recursos: -6, sociabilidad: 6 },
+            effects: { bienestar: 10, recursos: -4, sociabilidad: 6 },
             tag: "critico"
           }
         ]
@@ -1452,40 +1447,40 @@
         title: "La cola de la fotocopiadora",
         category: "decision",
         icon: "📑",
-        narrative: "Hay dos horas de fila para retirar el práctico. Un militante te ofrece el PDF escaneado chueco, mientras otro vende la copia anillada impecable a precio blue.",
+        narrative: "Hay una hora de fila en el subsuelo para retirar los prácticos de la semana. Un militante te ofrece el cuadernillo anillado impecable a la venta, mientras otro comparte un enlace con los textos escaneados.",
         options: [
           {
-            text: "Comprar el anillado de lujo impecable",
-            consequenceText: "Tus apuntes huelen a tóner fresco y tus subrayados son la envidia del pabellón, pero achicás tu presupuesto.",
-            effects: { recursos: -12, capitalAcademico: 8, bienestar: 4 },
+            text: "Comprar el cuadernillo anillado completo",
+            consequenceText: "Tus apuntes huelen a tinta fresca y tus subrayados son la envidia del pabellón, pero achicás tu presupuesto.",
+            effects: { recursos: -10, capitalAcademico: 6, bienestar: 4 },
             tag: "investigador"
           },
           {
-            text: "Descargar el PDF pirata y compartirlo",
-            consequenceText: "Ahorrás dinero y te ganás la simpatía de la comisión compartiendo el enlace con OCR incluido.",
-            effects: { recursos: 4, sociabilidad: 8, compromisoSocial: 6 },
-            tag: "docente"
+            text: "Descargar los textos escaneados y leer en pantalla",
+            consequenceText: "Ahorrás dinero para el almuerzo, aunque terminás con la vista cansada de leer PDFs torcidos.",
+            effects: { recursos: 4, bienestar: -4, capitalAcademico: 4 },
+            tag: "tech_privado"
           }
         ]
       },
 
       grupo_estudio: {
-        title: "Grupo de estudio de los sábados",
+        title: "Grupo de estudio de ingresantes",
         category: "oportunidad",
         icon: "🤝",
-        narrative: "Estudiantes avanzados te invitan a un grupo autónomo de lectura de Walter Benjamin y Spinoza los fines de semana.",
+        narrative: "Compañeros de comisión organizan juntadas los sábados en el bar de Puán para desmenuzar los textos teóricos más complejos y debatir en conjunto.",
         options: [
           {
-            text: "Sumarte al debate teórico riguroso",
-            consequenceText: "Descubrís afinidades electivas y leen textos en alemán, sacrificando tus tardes de ocio.",
-            effects: { capitalAcademico: 10, sociabilidad: 6, bienestar: -6 },
-            tag: "investigador"
+            text: "Sumarse a las lecturas colectivas en el bar",
+            consequenceText: "Construís amistades entrañables y aprendés a discutir en voz alta mientras comparten un café con leche.",
+            effects: { sociabilidad: 8, compromisoSocial: 6, bienestar: 6 },
+            tag: "docente"
           },
           {
-            text: "Preservar el fin de semana para descansar",
-            consequenceText: "Mantenés una vida equilibrada y vínculos afectivos fuera del microclima académico.",
-            effects: { bienestar: 14, sociabilidad: 6 },
-            tag: "critico"
+            text: "Estudiar en soledad en la biblioteca central",
+            consequenceText: "Avanzás a tu propio ritmo con fichas de lectura impecables y máxima concentración silenciosa.",
+            effects: { capitalAcademico: 8, sociabilidad: -4, bienestar: 4 },
+            tag: "investigador"
           }
         ]
       },
@@ -1494,19 +1489,19 @@
         title: "Asamblea interclaustro en el patio",
         category: "evento",
         icon: "📢",
-        narrative: "La discusión presupuestaria paraliza la facultad. Se debate cortar la calle y tomar medidas gremiales o continuar con las lecturas.",
+        narrative: "El patio central se llena de estudiantes y docentes en una asamblea por el presupuesto universitario. Tu participación aporta al debate colectivo, pero tenés que terminar una entrega para mañana.",
         options: [
           {
-            text: "Militar la asamblea y redactar el petitorio",
-            consequenceText: "Aprendés retórica de barricada y solidaridad colectiva, postergando la entrega de tus fichas de lectura.",
-            effects: { compromisoSocial: 14, sociabilidad: 8, capitalAcademico: -6 },
+            text: "Quedarse en la asamblea y participar activamente",
+            consequenceText: "Te integrás a la vida política de la facultad y entendés la universidad como un espacio de lucha colectiva.",
+            effects: { compromisoSocial: 10, sociabilidad: 8, bienestar: 4 },
             tag: "docente"
           },
           {
-            text: "Aprovechar el aula vacía para avanzar tu texto",
-            consequenceText: "Avanzás 15 páginas de tu proyecto personal, aunque tus pares te miran con escepticismo de clase.",
-            effects: { capitalAcademico: 10, compromisoSocial: -6, bienestar: 4 },
-            tag: "tech_privado"
+            text: "Ir a la sala de lectura a terminar el práctico",
+            consequenceText: "Entregás la guía en tiempo y forma con nota perfecta, aunque sentís cierta culpa cívica.",
+            effects: { capitalAcademico: 8, compromisoSocial: -4, bienestar: 2 },
+            tag: "investigador"
           }
         ]
       },
@@ -1515,61 +1510,61 @@
         title: "La ruleta del SIU Guaraní",
         category: "crisis",
         icon: "💻",
-        narrative: "A medianoche abren las inscripciones y los servidores colapsan al minuto 0. Te quedaste afuera del seminario que necesitás para graduarte.",
+        narrative: "Abren las inscripciones a materias a la medianoche y el servidor colapsa instantáneamente. Quedás afuera de la comisión que querías con el docente de tus sueños.",
         options: [
           {
-            text: "Hacer guardia en el pasillo para rogarle al titular",
-            consequenceText: "Esperás cuatro horas de pie, pero conseguís que te acepten como oyente con promesa de promoción.",
-            effects: { capitalInstitucional: 8, bienestar: -10, capitalAcademico: 5 },
+            text: "Hacer fila en el departamento de alumnos a las 7 am",
+            consequenceText: "Conseguís que te agreguen a mano en una planilla de excepción tras una odisea burocrática agotadora.",
+            effects: { capitalAcademico: 6, bienestar: -10, sociabilidad: 4 },
             tag: "investigador"
           },
           {
-            text: "Anotarte en una materia optativa flexible",
-            consequenceText: "Cursás una materia liviana sin estrés y ganás tiempo libre para buscar changas laborales.",
-            effects: { bienestar: 10, recursos: 10 },
+            text: "Anotarte en cualquier horario disponible y adaptarte",
+            consequenceText: "Aceptás cursar los viernes a la noche; no es tu comisión soñada, pero dormís en paz.",
+            effects: { bienestar: 6, capitalAcademico: -4, recursos: 2 },
             tag: "tech_privado"
           }
         ]
       },
 
-      ayudantia_ad_honorem: {
-        title: "Ayudantía ad honorem de segunda",
+      comision_practico: {
+        title: "Intervenciones en la comisión de prácticos",
         category: "decision",
-        icon: "👨‍🏫",
-        narrative: "El titular de cátedra te ofrece ser ayudante de prácticos sin sueldo, prometiendo que te servirá para 'hacer currículum' y futuras cartas de aval.",
+        icon: "📝",
+        narrative: "El jefe de trabajos prácticos plantea una pregunta conceptual difícil sobre el texto del día. Podés arriesgar una hipótesis para destacar o limitarte a escuchar a los demás.",
         options: [
           {
-            text: "Aceptar el cargo ad honorem con orgullo",
-            consequenceText: "Corregís 60 parciales un domingo gratis, pero tu nombre aparece en el programa oficial de la materia.",
-            effects: { capitalInstitucional: 14, prestigio: 8, recursos: -8 },
-            tag: "investigador"
+            text: "Pedir la palabra y defender una hipótesis propia",
+            consequenceText: "El aula queda en silencio ante tu agudeza; el docente anota tu nombre con evidente interés intelectual.",
+            effects: { prestigio: 8, sociabilidad: 4, capitalAcademico: 6 },
+            tag: "critico"
           },
           {
-            text: "Rechazar el trabajo gratuito y buscar empleo pago",
-            consequenceText: "Defendés tu dignidad laboral y pagás tus expensas con un trabajo remunerado en blanco.",
-            effects: { recursos: 18, bienestar: 8, capitalInstitucional: -6 },
-            tag: "docente"
+            text: "Tomar notas detalladas sin exponerte",
+            consequenceText: "Tus apuntes de clase son los más completos del curso, sin haber corrido ningún riesgo innecesario.",
+            effects: { capitalAcademico: 6, bienestar: 4 },
+            tag: "investigador"
           }
         ]
       },
 
-      materia_filtro: {
-        title: "El final oral con tribunal temible",
+      primer_final_oral: {
+        title: "Primer examen final oral con tribunal",
         category: "avance",
         icon: "📚",
-        narrative: "Llegó el examen oral de la materia más temida. Tres profesores con gesto severo te piden que elijas un punto del programa.",
+        narrative: "Llegó tu primer examen final oral frente a un tribunal de tres profesores en el tercer piso. El titular te pide que elijas un tema especial para arrancar.",
         options: [
           {
-            text: "Defender una hipótesis teórica audaz y arriesgada",
-            consequenceText: "El tribunal te felicita por tu originalidad y te identifican como una promesa intelectual de la carrera.",
-            effects: { capitalAcademico: 14, prestigio: 10, bienestar: -6 },
+            text: "Exponer un tema complejo con bibliografía optativa",
+            consequenceText: "Los profesores quedan maravillados con tu nivel de lectura y te felicitan efusivamente.",
+            effects: { capitalAcademico: 12, prestigio: 8, bienestar: -8 },
             tag: "investigador"
           },
           {
-            text: "Hacer una exposición prudente, clásica y sin fisuras",
-            consequenceText: "Aprobás con solvencia sin exponerte al fuego cruzado ni sufrir sobresaltos.",
-            effects: { capitalAcademico: 8, bienestar: 6, sociabilidad: 4 },
-            tag: "docente"
+            text: "Elegir un tema clásico del programa y asegurar la nota",
+            consequenceText: "Respondés con sobriedad y solvencia; aprobás con tranquilidad y respirás aliviado/a.",
+            effects: { bienestar: 8, capitalAcademico: 6, recursos: 2 },
+            tag: "tech_privado"
           }
         ]
       },
@@ -1578,376 +1573,399 @@
         title: "Tertulia nocturna en el bar de Puán",
         category: "personal",
         icon: "🍻",
-        narrative: "Terminaron los prácticos y la discusión epistemológica continúa con cerveza tirada, maníes y humo en el bar de la esquina.",
+        narrative: "Terminó la semana de cursada y la mesa del bar se llena de cerveza, maní y discusiones apasionadas sobre estructuralismo, política nacional y amores de pasillo.",
         options: [
           {
-            text: "Quedarte hasta el cierre debatiendo estética y política",
-            consequenceText: "Te convertís en un personaje entrañable de la noche de Caballito y tejés alianzas clave para el futuro.",
-            effects: { sociabilidad: 14, prestigio: 6, recursos: -8 },
+            text: "Quedarse debatiendo hasta la medianoche",
+            consequenceText: "Reafirmás que la vida universitaria también se cocina en los bares y forjás complicidades imborrables.",
+            effects: { sociabilidad: 10, bienestar: 10, recursos: -6 },
             tag: "critico"
           },
           {
-            text: "Tomar el subte temprano para cuidar tu bolsillo y sueño",
-            consequenceText: "Dormís ocho horas seguidas y tu cuenta bancaria agradece la sensatez madura.",
-            effects: { bienestar: 10, recursos: 8 },
+            text: "Volver a casa a descansar y cuidar el presupuesto",
+            consequenceText: "Tu billetera agradece la prudencia y el sábado a la mañana estás con la mente despejada para leer.",
+            effects: { recursos: 6, sociabilidad: -4, bienestar: 4 },
             tag: "tech_privado"
           }
         ]
       },
 
-      jornadas_jovenes: {
-        title: "Jornadas de jóvenes investigadores",
+      jornadas_estudiantes: {
+        title: "Jornadas de investigación para ingresantes",
         category: "oportunidad",
         icon: "🎤",
-        narrative: "Se abre la convocatoria para presentar tu primera ponencia. Podés armar un texto formal o un ensayo irreverente.",
+        narrative: "Se organizan jornadas donde estudiantes avanzados presentan sus primeros ensayos. Te proponen colaborar como asistente de sala o moderador/a.",
         options: [
           {
-            text: "Presentar un texto ortodoxo con 40 notas al pie",
-            consequenceText: "Tu trabajo es elogiado por los profesores mayores por su rigurosidad filológica impecable.",
-            effects: { capitalAcademico: 10, capitalInstitucional: 6 },
+            text: "Colaborar en la organización y escuchar ponencias",
+            consequenceText: "Hacés contactos valiosos con docentes del departamento y descubrís cómo funciona el mundo académico.",
+            effects: { capitalInstitucional: 8, sociabilidad: 6, capitalAcademico: 4 },
             tag: "investigador"
           },
           {
-            text: "Escribir un ensayo provocador sobre cultura y política",
-            consequenceText: "La mesa explota en aplausos y te invitan a colaborar en una revista cultural independiente.",
-            effects: { prestigio: 10, sociabilidad: 8, compromisoSocial: 6 },
+            text: "Aprovechar la tarde libre para ponerte al día",
+            consequenceText: "Terminás todos los prácticos atrasados y ganás horas valiosas para estudiar sin presiones.",
+            effects: { bienestar: 8, capitalInstitucional: -4, capitalAcademico: 4 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      // --- PARTE 2: PARTE MEDIA DE LA CARRERA ---
+      contacto_catedra: {
+        title: "Primer contacto con una cátedra",
+        category: "parada",
+        icon: "🛑",
+        narrative: "Aprobaste las materias troncales y te acercás a un docente de tu área favorita para consultar cómo sumarte al equipo en calidad de futuro/a adscripto/a.",
+        options: [
+          {
+            text: "Ofrecerte para fichar bibliografía y preparar clases",
+            consequenceText: "La cátedra te abre sus puertas; empezás a colaborar en programas y ganás respaldo docente incondicional.",
+            effects: { capitalAcademico: 12, capitalInstitucional: 10, bienestar: -8 },
+            tag: "investigador"
+          },
+          {
+            text: "Proponer una línea de lectura propia y alternativa",
+            consequenceText: "El docente aprecia tu espíritu crítico independiente y te sugiere escribir un ensayo exploratorio.",
+            effects: { prestigio: 10, sociabilidad: 6, capitalAcademico: 6 },
             tag: "critico"
+          }
+        ]
+      },
+
+      monografia_parcial: {
+        title: "Cómo encarar la monografía de mitad de carrera",
+        category: "decision",
+        icon: "📄",
+        narrative: "Una materia optativa exige una monografía de 20 páginas como examen parcial. Podés explorar una hipótesis teórica muy ambiciosa o resolverla con pragmatismo.",
+        options: [
+          {
+            text: "Escribir un ensayo erudito y exhaustivo",
+            consequenceText: "Pasás semanas leyendo fuentes secundarias; el trabajo es elogiado como material de publicación.",
+            effects: { capitalAcademico: 10, prestigio: 8, bienestar: -10 },
+            tag: "investigador"
+          },
+          {
+            text: "Resolver las consignas con precisión y rapidez",
+            consequenceText: "Aprobás con solvencia en tiempo récord y te queda tiempo libre para trabajar y descansar.",
+            effects: { bienestar: 10, recursos: 4, capitalAcademico: 4 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      novela_secreta: {
+        title: "El inicio de una novela propia",
+        category: "personal",
+        icon: "✍️",
+        narrative: "Sentís que las lecturas de la carrera encienden tu vocación creativa. Comenzás a escribir los primeros capítulos de una novela de ficción o un libro de poemas por las noches.",
+        options: [
+          {
+            text: "Dedicarle tus mejores horas creativas a la ficción",
+            consequenceText: "La escritura fluye como nunca y sentís que encontraste tu voz propia, aunque postergás entregas teóricas.",
+            effects: { prestigio: 12, bienestar: 10, capitalAcademico: -6 },
+            tag: "critico"
+          },
+          {
+            text: "Dejar la literatura para las vacaciones y priorizar la cursada",
+            consequenceText: "Mantenés tu cronograma de materias al día sin sobresaltos, archivando la libreta de borradores.",
+            effects: { capitalAcademico: 8, bienestar: -6, prestigio: 2 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      colectivo_artistico: {
+        title: "Grupo artístico y experimental",
+        category: "oportunidad",
+        icon: "🎭",
+        narrative: "Compañeros de la facultad te invitan a sumarte a un colectivo de teatro independiente y performance que ensaya en el subsuelo y se presenta en centros culturales barriales.",
+        options: [
+          {
+            text: "Sumarse a los ensayos y actuar en las funciones",
+            consequenceText: "Experimentás el arte en cuerpo propio y conectás con la escena cultural viva de la ciudad.",
+            effects: { sociabilidad: 12, bienestar: 10, capitalAcademico: -6 },
+            tag: "critico"
+          },
+          {
+            text: "Agradecer la invitación pero concentrarte en los libros",
+            consequenceText: "Preservás tus fines de semana para el estudio sistemático y evitás distracciones extracurriculares.",
+            effects: { capitalAcademico: 8, sociabilidad: -4, bienestar: 2 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      revista_fanzine: {
+        title: "Fundar una revista cultural o fanzine",
+        category: "decision",
+        icon: "🗞️",
+        narrative: "Con un grupo de amigos deciden autogestionar una revista independiente para publicar críticas de cine, reseñas de libros y ensayos filosos sin filtro académico.",
+        options: [
+          {
+            text: "Editar y maquetar la publicación colectiva",
+            consequenceText: "El fanzine circula de mano en mano por los pasillos y se convierte en tema de conversación obligado.",
+            effects: { prestigio: 10, sociabilidad: 10, recursos: -8 },
+            tag: "critico"
+          },
+          {
+            text: "Enviar un artículo breve a una revista ya establecida",
+            consequenceText: "Sumás una publicación formal a tu currículum académico sin asumir los costos de impresión.",
+            effects: { capitalInstitucional: 8, capitalAcademico: 6, recursos: 2 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      crisis_mitad_carrera: {
+        title: "Crisis vocacional de mitad de carrera",
+        category: "crisis",
+        icon: "⚡",
+        narrative: "Llevás la mitad de la carrera aprobada y te asalta la duda existencial: tus conocidos de otras carreras ya tienen empleo formal y vos seguís viviendo con fotocopias y café.",
+        options: [
+          {
+            text: "Reafirmar tu vocación humanística y redoblar la apuesta",
+            consequenceText: "Te convencés de que pensar críticamente el mundo vale más que cualquier oficina corporativa.",
+            effects: { compromisoSocial: 10, bienestar: 6, recursos: -6 },
+            tag: "docente"
+          },
+          {
+            text: "Buscar un trabajo administrativo para tener ingresos propios",
+            consequenceText: "Empezás a trabajar media jornada; tu billetera respira y ganás independencia económica real.",
+            effects: { recursos: 14, capitalAcademico: -6, bienestar: 4 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      coloquio_avanzados: {
+        title: "Coloquio de estudiantes avanzados",
+        category: "oportunidad",
+        icon: "🎙️",
+        narrative: "Aceptaron tu primera ponencia en un encuentro de estudiantes en una universidad del interior. Tenés que costear el pasaje y el alojamiento por tu cuenta.",
+        options: [
+          {
+            text: "Viajar a exponer y debatir con otras facultades",
+            consequenceText: "Vivís la experiencia de defender tu hipótesis en un aula ajena y hacés contactos federales valiosos.",
+            effects: { prestigio: 10, sociabilidad: 8, recursos: -10 },
+            tag: "investigador"
+          },
+          {
+            text: "Presentar el trabajo de forma virtual o local",
+            consequenceText: "Ahorrás dinero y exponés tus argumentos sin tener que viajar ni pedir días en el trabajo.",
+            effects: { recursos: 6, prestigio: 4, bienestar: 4 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      trabajo_archivo: {
+        title: "Tardes en el archivo de la biblioteca",
+        category: "decision",
+        icon: "🏛️",
+        narrative: "Para un trabajo de investigación podés encerrarte en el archivo histórico a revisar cartas manuscritas de época o trabajar con debates teóricos digitalizados en internet.",
+        options: [
+          {
+            text: "Revisar manuscritos y fuentes originales con guantes",
+            consequenceText: "Descubrís un documento inédito fascinante; los docentes elogian tu vocación filológica de archivo.",
+            effects: { capitalAcademico: 12, prestigio: 6, bienestar: -6 },
+            tag: "investigador"
+          },
+          {
+            text: "Analizar bibliografía teórica digitalizada desde tu casa",
+            consequenceText: "Escribís tu monografía cómodo/a con mate en tu escritorio y cerrás la materia con solvencia.",
+            effects: { bienestar: 8, capitalAcademico: 6, recursos: 2 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      comision_carrera: {
+        title: "Participación en la junta departamental",
+        category: "evento",
+        icon: "👥",
+        narrative: "Se debate la reforma de correlatividades y seminarios en la junta de tu carrera. Te proponen representar la voz de los estudiantes en las sesiones.",
+        options: [
+          {
+            text: "Involucrarte en la política académica de la carrera",
+            consequenceText: "Aprendés cómo funciona la cocina institucional y defendés los derechos estudiantiles en las actas.",
+            effects: { capitalInstitucional: 12, compromisoSocial: 8, bienestar: -6 },
+            tag: "docente"
+          },
+          {
+            text: "Dejar la gestión a los militantes y cursar tus materias",
+            consequenceText: "Evitás horas de discusiones burocráticas y avanzás a paso firme en tus lecturas del cuatrimestre.",
+            effects: { bienestar: 8, capitalInstitucional: -4, capitalAcademico: 4 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      // --- PARTE 3: PARTE FINAL DE LA CARRERA ---
+      ayudantia_segunda: {
+        title: "Concurso para ayudantía de segunda",
+        category: "parada",
+        icon: "🛑",
+        narrative: "Se abre una selección interna de antecedentes y oposición para ayudante de segunda (ayudante alumno) en una cátedra clave. Es tu primer cargo docente oficial de grado.",
+        options: [
+          {
+            text: "Preparar intensivamente la clase de oposición frente al jurado",
+            consequenceText: "Das una clase magistral brillante; el jurado te otorga el primer lugar y ya tenés cargo en cátedra.",
+            effects: { capitalAcademico: 14, prestigio: 12, bienestar: -10 },
+            tag: "investigador"
+          },
+          {
+            text: "Presentarte con solvencia sin descuidar tu cursada actual",
+            consequenceText: "Quedás bien ubicado/a en el orden de mérito y cuidás tu energía para terminar las materias.",
+            effects: { bienestar: 8, capitalInstitucional: 8, sociabilidad: 6 },
+            tag: "docente"
+          }
+        ]
+      },
+
+      horas_escuela: {
+        title: "Tomar horas en una escuela secundaria",
+        category: "decision",
+        icon: "🎒",
+        narrative: "Alcanzaste el porcentaje de materias que te habilita a tomar horas en el sistema de educación media. El sueldo mensual es tentador, pero exige planificar clases y corregir carpetas.",
+        options: [
+          {
+            text: "Aceptar las horas docentes y pararte frente al aula real",
+            consequenceText: "Tus finanzas respiran con sueldo formal y descubrís la magia de enseñar en aulas secundarias reales.",
+            effects: { compromisoSocial: 14, recursos: 16, bienestar: -8 },
+            tag: "docente"
+          },
+          {
+            text: "Postergar la docencia para terminar las materias más rápido",
+            consequenceText: "Mantenés tu concentración plena en los últimos seminarios para recibirte lo antes posible.",
+            effects: { capitalAcademico: 10, recursos: -8, bienestar: 4 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      adscripcion_formal: {
+        title: "Proyecto de adscripción formal en cátedra",
+        category: "oportunidad",
+        icon: "📑",
+        narrative: "Tu docente referente te ofrece presentar un proyecto de adscripción oficial avalado por el departamento para investigar formalmente durante dos años.",
+        options: [
+          {
+            text: "Presentar un plan articulado con el programa de investigación mayor",
+            consequenceText: "Quedás formalmente integrado/a al equipo de investigación y sentás las bases de tu perfil doctoral.",
+            effects: { capitalAcademico: 12, capitalInstitucional: 10, bienestar: -6 },
+            tag: "investigador"
+          },
+          {
+            text: "Armar una adscripción con temática independiente y heterodoxa",
+            consequenceText: "Investigás exactamente lo que te apasiona con total libertad de criterio y mirada personal.",
+            effects: { prestigio: 10, sociabilidad: 8, bienestar: 6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      trabajo_redaccion: {
+        title: "Oferta de redacción o trabajo editorial",
+        category: "decision",
+        icon: "💼",
+        narrative: "Una editorial independiente o agencia de contenidos te ofrece un puesto de corrector/a o redactor/a con salario fijo de media jornada.",
+        options: [
+          {
+            text: "Aceptar el trabajo editorial y ganar independencia material",
+            consequenceText: "Entrás al mercado laboral formal, cobrás a principio de mes y aplicás tus lecturas en el mundo real.",
+            effects: { recursos: 18, bienestar: 6, capitalAcademico: -6 },
+            tag: "tech_privado"
+          },
+          {
+            text: "Rechazarlo para concentrarte exclusivamente en recibirte",
+            consequenceText: "Apretás los dientes con la economía pero acelerás a fondo en el tramo final de la carrera.",
+            effects: { capitalAcademico: 10, recursos: -10, prestigio: 4 },
+            tag: "investigador"
+          }
+        ]
+      },
+
+      seminario_investigacion: {
+        title: "Elección del último seminario temático",
+        category: "decision",
+        icon: "📖",
+        narrative: "Tenés que elegir el último seminario de grado. Podés cursar con la eminencia teórica consagrada de la disciplina o con un equipo docente joven y vanguardista.",
+        options: [
+          {
+            text: "Cursar con la eminencia consagrada para obtener su respaldo",
+            consequenceText: "El profesor titular elogia tus intervenciones y te ofrece firmar recomendaciones para tu egreso.",
+            effects: { capitalInstitucional: 12, prestigio: 10, bienestar: -8 },
+            tag: "investigador"
+          },
+          {
+            text: "Elegir el seminario de debate interdisciplinario y nuevos enfoques",
+            consequenceText: "Disfrutás debates frescos sobre nuevos paradigmas y tejés lazos estrechos con docentes jóvenes.",
+            effects: { sociabilidad: 10, bienestar: 10, prestigio: 6 },
+            tag: "critico"
+          }
+        ]
+      },
+
+      agotamiento_final: {
+        title: "El último esfuerzo antes del título",
+        category: "personal",
+        icon: "🧘",
+        narrative: "Quedan apenas los trámites y las últimas entregas, pero arrastrás el cansancio acumulado de años de cursadas, exámenes y fotocopias.",
+        options: [
+          {
+            text: "Hacer una pausa de descanso para cuidar tu salud mental",
+            consequenceText: "Recuperás energías, dormís ocho horas y volvés al campus con el ánimo renovado para el cierre.",
+            effects: { bienestar: 14, recursos: -4, sociabilidad: 4 },
+            tag: "critico"
+          },
+          {
+            text: "Meterle a fondo sin descanso para recibirte en este turno",
+            consequenceText: "A pura cafeína y voluntad férrea, liquidás todas las obligaciones pendientes en tiempo récord.",
+            effects: { capitalAcademico: 10, bienestar: -12, recursos: 4 },
+            tag: "tech_privado"
+          }
+        ]
+      },
+
+      extension_universitaria: {
+        title: "Proyecto de extensión territorial",
+        category: "oportunidad",
+        icon: "🌱",
+        narrative: "La secretaría de extensión abre una convocatoria para dictar talleres comunitarios de lectura y escritura en centros barriales o bibliotecas populares.",
+        options: [
+          {
+            text: "Comprometerte con el taller territorial y volcar tus saberes",
+            consequenceText: "La experiencia transforma tu visión de las humanidades: entendés el poder social de la palabra compartida.",
+            effects: { compromisoSocial: 16, sociabilidad: 10, bienestar: 6 },
+            tag: "docente"
+          },
+          {
+            text: "Dedicar ese tiempo a pulir la monografía final",
+            consequenceText: "Avanzás en los borradores de tu entrega final sin dispersar esfuerzos en otras actividades.",
+            effects: { capitalAcademico: 10, compromisoSocial: -6, bienestar: 2 },
+            tag: "investigador"
           }
         ]
       },
 
       monografia_seminario: {
         title: "Monografía del último seminario de grado",
-        category: "parada",
-        icon: "🛑",
-        narrative: "Llegaste al último seminario de la carrera para recibirte de licenciado/a. El profesor exige una monografía exhaustiva con hipótesis original y aparato crítico riguroso para firmar las actas finales.",
+        category: "avance",
+        icon: "🎓",
+        narrative: "Llegó la entrega final del último seminario de la carrera para que el profesor cierre las actas y te recibas de licenciado/a en Puán.",
         options: [
           {
-            text: "Escribir un ensayo monumental y exhaustivo (un año más)",
-            consequenceText: "Un trabajo de erudición impecable que la cátedra elogia de pie, a costa de postergar tu graduación y tus ingresos.",
-            effects: { capitalAcademico: 16, prestigio: 12, bienestar: -12, recursos: -12 },
+            text: "Escribir un ensayo monumental y exhaustivo de erudición",
+            consequenceText: "Un trabajo de erudición impecable que la cátedra felicita de pie; cerrás tu carrera con broche de oro teórico.",
+            effects: { capitalAcademico: 16, prestigio: 12, bienestar: -10, recursos: -8 },
             tag: "investigador"
           },
           {
             text: "Entregar una monografía sobria, precisa y pragmática",
-            consequenceText: "Aprobás con solvencia, cerrás las actas de la última materia y ya tenés el título listo para salir al mercado.",
-            effects: { bienestar: 12, recursos: 12, capitalInstitucional: 8 },
+            consequenceText: "Aprobás con solvencia, cerrás las actas de la última materia y ya tenés el título listo para salir al mundo.",
+            effects: { bienestar: 12, recursos: 10, capitalInstitucional: 8 },
             tag: "tech_privado"
-          }
-        ]
-      },
-
-      fiesta_graduacion: {
-        title: "Festejo de graduación en las escalinatas",
-        category: "personal",
-        icon: "🎉",
-        narrative: "Tus amigos te esperan en las puertas de Puán con harina, papel picado y pancartas irónicas. ¡Ya tenés el título!",
-        options: [
-          {
-            text: "Celebrar a lo grande e invitar la ronda en el bar",
-            consequenceText: "Una noche inolvidable donde festejan el fin de los finales y el inicio de la incertidumbre adulta.",
-            effects: { sociabilidad: 16, bienestar: 12, recursos: -12 },
-            tag: "critico"
-          },
-          {
-            text: "Brindis íntimo y ordenar certificados para mañana",
-            consequenceText: "Mantenés los pies sobre la tierra y al día siguiente ya estás tramitando tus legalizaciones.",
-            effects: { bienestar: 8, recursos: 8, capitalInstitucional: 6 },
-            tag: "investigador"
-          }
-        ]
-      },
-
-      horas_escuela: {
-        title: "Las horas en la escuela secundaria",
-        category: "decision",
-        icon: "🎒",
-        narrative: "El acto público de asignación docente te ofrece 18 horas en una escuela media pública. Sueldo con recibo y obra social, pero 90 carpetas por corregir.",
-        options: [
-          {
-            text: "Agarrar las horas y poner el cuerpo en el aula",
-            consequenceText: "Conectás con la realidad viva de los pibes y aprendés pedagogía real en la trinchera escolar cotidiana.",
-            effects: { recursos: 24, compromisoSocial: 18, capitalAcademico: -8 },
-            tag: "docente"
-          },
-          {
-            text: "Rechazarlas para preservar tus horas de investigación",
-            consequenceText: "Conservás tus tardes para la biblioteca y congresos, viviendo con presupuesto austero.",
-            effects: { capitalAcademico: 12, prestigio: 8, recursos: -16 },
-            tag: "investigador"
-          }
-        ]
-      },
-
-      convocatoria_becas: {
-        title: "La convocatoria de becas de posgrado",
-        category: "oportunidad",
-        icon: "🌟",
-        narrative: "Se abre el llamado a becas de doctorado de CONICET y UBA. El formulario de postulación tiene decenas de pestañas obligatorias.",
-        options: [
-          {
-            text: "Completar la postulación milimétrica con avales de cátedra",
-            consequenceText: "Dedicás noches enteras a pulir el proyecto y quedás en los primeros puestos del orden de mérito.",
-            effects: { capitalAcademico: 12, capitalInstitucional: 8, bienestar: -10 },
-            tag: "investigador"
-          },
-          {
-            text: "Explorar becas internacionales o fundaciones externas",
-            consequenceText: "Te abrís camino por fuera de la rosca local y ampliás tus redes en el exterior.",
-            effects: { prestigio: 12, recursos: 14, sociabilidad: 6 },
-            tag: "tech_privado"
-          }
-        ]
-      },
-
-      beca_doctoral: {
-        title: "La beca doctoral adjudicada",
-        category: "decision",
-        icon: "🔬",
-        narrative: "¡Te otorgaron la beca de doctorado! Tenés dedicación exclusiva obligatoria, pero el estipendio apenas cubre el alquiler de un monoambiente.",
-        options: [
-          {
-            text: "Apostar todo a la investigación pura y de dedicación plena",
-            consequenceText: "Sos formalmente un científico de humanidades. Vivís de seminarios y papers, con economía ajustada.",
-            effects: { capitalAcademico: 18, prestigio: 14, recursos: -12 },
-            tag: "investigador"
-          },
-          {
-            text: "Complementar la beca con changas de redacción privada",
-            consequenceText: "Redactás contenidos comerciales mientras avanzás tu marco teórico. El dinero extra da tranquilidad.",
-            effects: { recursos: 22, capitalInstitucional: -6, bienestar: 6 },
-            tag: "tech_privado"
-          }
-        ]
-      },
-
-      congreso_internacional: {
-        title: "El congreso internacional en Lisboa",
-        category: "decision",
-        icon: "✈️",
-        narrative: "Aceptaron tu ponencia en Europa. El pasaje cuesta tres meses de tu sueldo y el subsidio universitario cubre apenas una fracción.",
-        options: [
-          {
-            text: "Endeudarte con tarjeta en cuotas y viajar a exponer",
-            consequenceText: "Exponés en auditorios de renombre y te sacás fotos con las vacas sagradas, quedando con deudas bancarias.",
-            effects: { prestigio: 20, capitalAcademico: 14, recursos: -28 },
-            tag: "investigador"
-          },
-          {
-            text: "Participar online y priorizar encuentros regionales",
-            consequenceText: "Exponés de forma virtual, comés un asado con colegas de La Plata o Rosario y cuidás tu bolsillo.",
-            effects: { recursos: 18, sociabilidad: 10, bienestar: 8 },
-            tag: "docente"
-          }
-        ]
-      },
-
-      crisis_alquiler: {
-        title: "Renovación de contrato de alquiler",
-        category: "crisis",
-        icon: "🏠",
-        narrative: "La inmobiliaria triplica el alquiler de tu departamento cerca de Puán y pide garantías imposibles.",
-        options: [
-          {
-            text: "Mudarte a una casa compartida con tres tesistas",
-            consequenceText: "Comparten gastos y debates de cocina a las 3 AM, tolerando el desorden colectivo.",
-            effects: { sociabilidad: 14, recursos: 10, bienestar: -8 },
-            tag: "critico"
-          },
-          {
-            text: "Irte al conurbano y sumar 2 horas de tren diarias",
-            consequenceText: "Aprovechás los viajes en tren para leer clásicos, aunque el cansancio corporal empieza a acumularse.",
-            effects: { recursos: 16, compromisoSocial: 10, bienestar: -12 },
-            tag: "docente"
-          }
-        ]
-      },
-
-      articulo_oportuno: {
-        title: "El artículo en revista indexada Q1",
-        category: "decision",
-        icon: "📰",
-        narrative: "Una revista de alto impacto te invita a coordinar un dossier sobre un tema de moda que no coincide con tu proyecto personal.",
-        options: [
-          {
-            text: "Subirte a la ola y publicar el artículo estratégico",
-            consequenceText: "Tu índice de citas se dispara y tu nombre aparece en los buscadores académicos internacionales.",
-            effects: { prestigio: 18, capitalAcademico: 12, bienestar: -8 },
-            tag: "investigador"
-          },
-          {
-            text: "Rechazar la moda y priorizar tu propio libro autoral",
-            consequenceText: "Conservás tu coherencia intelectual y no cedés ante las exigencias productivistas del paper.",
-            effects: { bienestar: 14, prestigio: -6, capitalAcademico: 6 },
-            tag: "critico"
-          }
-        ]
-      },
-
-      dictaminador_dos: {
-        title: "El dictamen del evaluador n.º 2",
-        category: "crisis",
-        icon: "⚡",
-        narrative: "El temido referato ciego rechazó tu artículo con ironías ácidas, exigiendo que cites toda la bibliografía de su propia cátedra.",
-        options: [
-          {
-            text: "Tragarte el orgullo, acatar las correcciones y citarlo",
-            consequenceText: "El texto finalmente se publica. Aprendiste la lección más amarga de la Realpolitik académica.",
-            effects: { capitalInstitucional: 12, capitalAcademico: 8, bienestar: -10 },
-            tag: "investigador"
-          },
-          {
-            text: "Retirar el texto y enviarlo a una revista independiente",
-            consequenceText: "El texto sale con portada ilustrada en una revista cultural y recibe lecturas del público real.",
-            effects: { bienestar: 12, prestigio: 8, capitalInstitucional: -6 },
-            tag: "critico"
-          }
-        ]
-      },
-
-      concurso_docente: {
-        title: "El concurso docente regular",
-        category: "parada",
-        icon: "🛑",
-        narrative: "Se abre concurso público de antecedentes y oposición para jefe de trabajos prácticos (JTP). Tenés pocos días para preparar la clase frente al tribunal.",
-        options: [
-          {
-            text: "Encerrarte a estudiar sin dormir para ganar el cargo",
-            consequenceText: "Tu clase de oposición fue brillante. Ganás estabilidad por varios años en la cátedra oficial.",
-            effects: { capitalInstitucional: 16, capitalAcademico: 14, bienestar: -14 },
-            tag: "investigador"
-          },
-          {
-            text: "Presentarte relajado/a sin descuidar tu empleo actual",
-            consequenceText: "Quedás segundo en el orden de mérito pero conservás tu paz mental y tu trabajo en la escuela.",
-            effects: { bienestar: 12, recursos: 10, sociabilidad: 6 },
-            tag: "docente"
-          }
-        ]
-      },
-
-      oferta_privado: {
-        title: "La oferta inesperada del sector tech",
-        category: "decision",
-        icon: "💼",
-        narrative: "Una multinacional tecnológica te ofrece un puesto como diseñador de contenidos / prompt engineer, con sueldo en dólares y trabajo remoto.",
-        options: [
-          {
-            text: "Aceptar la oferta corporativa y migrar al sector privado",
-            consequenceText: "Pagás tus deudas, comprás buena tecnología y aplicás semiótica a interfaces digitales y métricas de retención.",
-            effects: { recursos: 45, bienestar: 12, capitalAcademico: -12, compromisoSocial: -10 },
-            tag: "tech_privado"
-          },
-          {
-            text: "Rechazar los dólares y jurar fidelidad a la trinchera pública",
-            consequenceText: "Tus colegas aplauden tu lealtad doctrinaria mientras vos hacés cuentas para pagar la SUBE.",
-            effects: { compromisoSocial: 18, prestigio: 12, recursos: -18 },
-            tag: "docente"
-          }
-        ]
-      },
-
-      cargo_gestion: {
-        title: "La secretaría de gestión institucional",
-        category: "decision",
-        icon: "🗄️",
-        narrative: "Las autoridades de la facultad te proponen asumir una secretaría en el departamento. Ganás peso político, pero te devorará horas de trámites y firmas.",
-        options: [
-          {
-            text: "Aceptar y meter los pies en la rosca de gestión",
-            consequenceText: "Manejás horarios, comisiones y presupuestos. Te convertís en una figura ineludible de los pasillos.",
-            effects: { capitalInstitucional: 22, sociabilidad: 10, bienestar: -12, capitalAcademico: -8 },
-            tag: "investigador"
-          },
-          {
-            text: "Rechazar: 'Mi lugar es la lectura y el aula'",
-            consequenceText: "Te salvás de reuniones interminables y disfrutás leer en silencio en la biblioteca central.",
-            effects: { bienestar: 14, capitalAcademico: 10, capitalInstitucional: -6 },
-            tag: "critico"
-          }
-        ]
-      },
-
-      columna_cultural: {
-        title: "Columna en suplemento cultural",
-        category: "oportunidad",
-        icon: "🎙️",
-        narrative: "Un prestigioso portal de noticias y revista cultural te propone escribir ensayos breves y reseñas quincenales.",
-        options: [
-          {
-            text: "Aceptar y cultivar la voz del intelectual público",
-            consequenceText: "Tus textos se leen y se debaten con furia en redes. Te invitan a presentar libros y podcasts.",
-            effects: { prestigio: 20, sociabilidad: 15, recursos: 10 },
-            tag: "critico"
-          },
-          {
-            text: "Declinar: la divulgación abarata la pureza teórica",
-            consequenceText: "Permanecés recluido en el circuito de los journals especializados donde solo te leen tus pares.",
-            effects: { capitalAcademico: 12, sociabilidad: -8 },
-            tag: "investigador"
-          }
-        ]
-      },
-
-      ia_humanidades: {
-        title: "El dilema de la inteligencia artificial",
-        category: "decision",
-        icon: "🤖",
-        narrative: "Tus estudiantes entregan ensayos redactados con modelos de lenguaje. Se debate si prohibirla con exámenes manuscritos o integrarla críticamente.",
-        options: [
-          {
-            text: "Integrar la IA para debates sobre lenguaje y poder",
-            consequenceText: "Tus clases se llenan de debates fascinantes sobre autoría, algoritmo, verdad y subjetividad.",
-            effects: { compromisoSocial: 16, sociabilidad: 12, capitalInstitucional: 8 },
-            tag: "docente"
-          },
-          {
-            text: "Exigir parciales manuscritos en hojas de oficio",
-            consequenceText: "Revivís el siglo XIX. Tus alumnos sufren calambres pero aprenden a hilar ideas bajo presión analógica.",
-            effects: { capitalAcademico: 10, sociabilidad: -6 },
-            tag: "investigador"
-          }
-        ]
-      },
-
-      agotamiento_existencial: {
-        title: "El fantasma del agotamiento académico",
-        category: "personal",
-        icon: "🧘",
-        narrative: "Son las 3 de la mañana de un martes. Tenés que corregir 45 informes, rendir subsidios y cerrar un capítulo de libro. Tu cuerpo pide auxilio.",
-        options: [
-          {
-            text: "Desconectar el teléfono y salir a caminar sin culpa",
-            consequenceText: "Redescubrís que la vida no se termina en la fecha de entrega de un informe de gestión.",
-            effects: { bienestar: 22, sociabilidad: 8, prestigio: -6 },
-            tag: "critico"
-          },
-          {
-            text: "Tomar otro café doble y cumplir con todo a tiempo",
-            consequenceText: "Entregaste todo al minuto límite. Tu foja está impecable, aunque tus ojeras ya tienen código postal.",
-            effects: { capitalInstitucional: 12, capitalAcademico: 8, bienestar: -18 },
-            tag: "investigador"
-          }
-        ]
-      },
-
-      extension_comunitaria: {
-        title: "Proyecto de extensión territorial",
-        category: "decision",
-        icon: "🌱",
-        narrative: "Se abre un programa de alfabetización y memoria oral en comedores comunitarios. Exige viajar tres veces por semana sin viáticos pagos.",
-        options: [
-          {
-            text: "Comprometerte a fondo con la extensión en el barrio",
-            consequenceText: "Comprobás que las humanidades transforman vidas reales por fuera de la burbuja universitaria.",
-            effects: { compromisoSocial: 24, sociabilidad: 14, recursos: -10 },
-            tag: "docente"
-          },
-          {
-            text: "Priorizar la redacción de tus papers de investigación",
-            consequenceText: "Publicás otro paper indexado, aunque sentís un sordo remordimiento social en el pecho.",
-            effects: { capitalAcademico: 14, prestigio: 10, compromisoSocial: -10 },
-            tag: "investigador"
           }
         ]
       }
@@ -1955,48 +1973,48 @@
 
     /**
      * ========================================================================
-     * 4. LOS CUATRO DESENLACES PROFESIONALES (NARRATIVAS Y CRÓNICAS)
+     * 4. LOS CUATRO DESENLACES PROFESIONALES DE GRADO
      * ========================================================================
      */
     const CAREER_ENDINGS = {
       investigador: {
         id: "investigador",
-        title: "Investigador full-time",
-        subtitle: "Carrera del investigador científico (CONICET / IIGG - UBA)",
+        title: "Graduado/a con perfil académico y claustro",
+        subtitle: "Adscripción consolidada, ayudantía de cátedra y postulación a beca doctoral",
         badge: "🔬",
-        narrative: `Lograste la cúspide del escalafón académico: sos investigador/a de carrera. Tu hábitat natural son los comités evaluadores, el formato APA, los formularios SIGEVA que nunca guardan a tiempo y los informes de memoria anual donde justificás cada resma de papel con rigurosidad filológica. Aunque tu salario se devalúa periódicamente frente a la inflación y pasás más horas redactando pedidos de subsidio que leyendo por placer, gozás del respeto reverencial de tus colegas y del derecho inalienable a corregir en voz alta la etimología de cualquier palabra en una cena familiar. Tu biblioteca rebasa el departamento y tu vida es un monumento al rigor intelectual y la burocracia perpetua.`,
-        achievements: "Publicaciones indexadas en revistas Q1, dirección de becarios doctorales, prestigio indiscutido en tu especialidad y reconocimiento internacional.",
-        contradictions: "Salario moderado, dependencia de subsidios estatales demorados, insomnio por dictámenes y poco tiempo para la vida extracadémica."
+        narrative: `Terminaste la carrera con uno de los promedios más altos de tu camada y el respeto reverencial de las cátedras. Ya tenés adscripción formal aprobada, antecedentes como ayudante de segunda y cartas de recomendación firmadas por profesores titulares para postularte a una beca doctoral de posgrado. Tu hábitat natural son las fichas bibliográficas rigurosas, el análisis filológico y los debates teóricos en los pasillos del tercer piso. Salís de Puán con el diploma bajo el brazo y la mirada firmemente puesta en los institutos de investigación y los concursos universitarios.`,
+        achievements: "Promedio sobresaliente, adscripción formal consolidada, cargo de ayudante alumno y aval directo de cátedras para el posgrado.",
+        contradictions: "Años de austeridad material, cansancio acumulado por exigencias teóricas y la incertidumbre del sistema de becas."
       },
 
       docente: {
         id: "docente",
-        title: "Profesor de secundaria y terciario",
-        subtitle: "Pedagogía de trinchera, aulas vivas y compromiso social",
+        title: "Graduado/a con vocación docente y trinchera pedagógica",
+        subtitle: "Aulas vivas, horas en secundarias y democratización del pensamiento",
         badge: "🎒",
-        narrative: `Elegiste el barro de las aulas reales y no lo cambiás por ningún congreso en Europa. Con una tiza en el bolsillo y una pila de 120 evaluaciones sobre la mesa del comedor, sos quien verdaderamente democratiza el pensamiento humanístico todos los días. Te sabés de memoria los nombres, las historias familiares y los dilemas de tres generaciones de estudiantes a los que les enseñaste a dudar de lo obvio. Lidiaste con goteras en el techo, paros docentes y fotocopias pagadas de tu bolsillo, pero la satisfacción humana cuando un alumno de quinto año te dice 'profe, gracias a usted entendí lo que quiero hacer con mi vida' supera con creces cualquier mención honorífica en un congreso.`,
-        achievements: "Vínculos humanos imborrables, impacto social directo, estabilidad en el estatuto docente y una vocación pedagógica a prueba de balas.",
-        contradictions: "Cansancio crónico en la voz, correcciones los fines de semana, sueldo que exige correr de una escuela a otra y escaso reconocimiento institucional."
+        narrative: `Elegiste el barro y la vitalidad de las aulas reales y no lo cambiás por ninguna torre de marfil. Mientras cursabas las últimas materias ya estabas dando clases en escuelas secundarias o terciarios, aprendiendo a traducir conceptos filosóficos y literarios complejos al lenguaje cotidiano de pibes que necesitan herramientas para pensar el mundo. Lidiaste con colectivos llenos, carpetas pesadas y actas interminables, pero nada se compara con la satisfacción cuando un estudiante te dice 'profe, gracias a su clase empecé a leer'. Salís de Puán como un/a pedagogo/a cabal con impacto social directo.`,
+        achievements: "Experiencia docente genuina frente a cursos reales, compromiso comunitario y una vocación pedagógica a prueba de balas.",
+        contradictions: "Cansancio crónico en la voz, fines de semana corrigiendo exámenes y el desafío de sostener la economía corriendo entre escuelas."
       },
 
       critico: {
         id: "critico",
-        title: "Crítico cultural y ensayista público",
-        subtitle: "Escritura autónoma, suplementos, medios y polémicas",
+        title: "Graduado/a creador/a, ensayista y agitador/a cultural",
+        subtitle: "Escritura de ficción, revistas independientes y proyectos artísticos",
         badge: "🎙️",
-        narrative: `Te convertiste en una voz ineludible del debate público y la escena cultural. Escribís ensayos incisivos en revistas independientes, coordinás talleres literarios donde se debate hasta la madrugada, publicás columnas que desatan debates furiosos en redes sociales y te invitan a moderar mesas en la Feria del Libro. Tu relación con la academia formal es de mutua seducción y distancia prudencial: ellos te envidian la soltura de la prosa y la llegada popular; vos les envidiás el recibo de sueldo regular a principio de mes. Vivís de adelantos editoriales irregulares, conferencias y colaboraciones periodísticas, pero tu autonomía de pensamiento es absoluta.`,
-        achievements: "Libertad intelectual total, presencia pública destacada, red de amistades estimulante y libros propios en vidrieras.",
-        contradictions: "Ingresos económicos fluctuantes, precariedad previsional, envidias de pasillo y el desgaste de estar siempre opinando sobre la última novedad."
+        narrative: `No permitiste que los programas de estudio domesticaran tu creatividad. A lo largo de la carrera escribiste una novela o poemario, fundaste fanzines, participaste en colectivos teatrales o cinematográficos y usaste los textos de la facultad como combustible para la invención estética más que como dogma académico. Tus compañeros te admiran por tu prosa afilada y tu soltura para intervenir en polémicas públicas y artísticas. Te recibís con el título en una mano y tus propios manuscritos en la otra: las humanidades son para vos una herramienta de creación vital y pensamiento libre.`,
+        achievements: "Novela o proyectos artísticos en marcha, libertad de pensamiento absoluta y reconocimiento en circuitos culturales alternativos.",
+        contradictions: "Ingresos económicos fluctuantes, distancia prudencial con la jerarquía del claustro y la eterna tensión entre rigor y creación."
       },
 
       tech_privado: {
         id: "tech_privado",
-        title: "Estratega fuera del campo / sector tech",
-        subtitle: "De la hermenéutica a los OKR, el UX y la consultoría global",
+        title: "Graduado/a pragmático/a y profesional fuera del claustro",
+        subtitle: "Independencia económica, sector editorial/comunicación y título en mano",
         badge: "💼",
-        narrative: `Rompiste el mandato endogámico de la facultad y descubriste que el rigor hermenéutico cotiza alto en el mercado corporativo y tecnológico. Hoy trabajás como Lead UX Writer, analista de contenidos o estratega en inteligencia artificial para empresas extranjeras, cobrando en dólares desde la comodidad de tu hogar. Tus compañeros de camada a veces te miran con una mezcla de sospecha ideológica y secreta envidia cuando los invitás a cenar y pagás la cuenta completa. Mirás tu ejemplar subrayado de Foucault en la biblioteca con una ternura irónica mientras optimizás prompts y liderás reuniones en inglés. Encontraste estabilidad material sin haber perdido la agudeza crítica que te dio Puán.`,
-        achievements: "Tranquilidad económica plena, equipamiento tecnológico de punta, viajes sin deudas y aplicación práctica de las humanidades en la economía moderna.",
-        contradictions: "Nostalgia por el debate teórico desinteresado, sensación de extranjería cultural frente a tus raíces y la inevitable paradoja de servir al gran capital."
+        narrative: `Demostraste que se puede estudiar Humanidades con pasión sin caer en el mandato de la precariedad romantizada ni ser un estudiante eterno. Trabajaste durante toda la carrera, optimizaste tus tiempos de lectura con pragmatismo implacable y liquidaste cada final sin quedarte empantanado/a en internas departamentales. Hoy te recibís con experiencia laboral concreta en el mundo editorial, la redacción estratégica o la consultoría de contenidos, cobrando un sueldo digno e independiente. Salís de Puán habiendo aprovechado la agudeza crítica de la carrera pero con los pies firmemente plantados en la realidad material.`,
+        achievements: "Independencia financiera plena, carrera de grado terminada a tiempo, título habilitante en mano y cero deudas materiales.",
+        contradictions: "Nostalgia por los debates teóricos que no pudiste profundizar y la mirada de sospecha de los puristas del claustro."
       }
     };
 
@@ -2177,13 +2195,10 @@
         });
 
         // Etapa en barra superior
-        const stageNames = [
-          "Etapa 1: Ingreso a la Carrera",
-          "Etapa 2: Vida estudiantil",
-          "Etapa 3: Graduación y primeros pasos",
-          "Etapa 4: Posgrado e investigación",
-          "Etapa 5: Consolidación laboral",
-          "Etapa 6: Recta final y desenlace"
+                const stageNames = [
+          "Parte 1: Ingresante",
+          "Parte 2: Parte media de la carrera",
+          "Parte 3: Parte final de la carrera"
         ];
         this.hudStageLabel.textContent = stageNames[tile.stageId - 1] || "Carrera académica";
       },
@@ -2265,9 +2280,9 @@
 
         const tagLabels = {
           investigador: "Enfoque: Investigación y claustro",
-          docente: "Enfoque: Vocación y compromiso pedagógico",
-          critico: "Enfoque: Crítica cultural y ensayo",
-          tech_privado: "Enfoque: Sector privado y nuevas tecnologías",
+          docente: "Enfoque: Vocación docente y trinchera",
+          critico: "Enfoque: Creación artística y ensayo",
+          tech_privado: "Enfoque: Independencia y pragmatismo",
           equilibrado: "Exploración vocacional en Puán"
         };
         this.badgeInclinacion.textContent = tagLabels[leadTag] || "Exploración en Puán";
