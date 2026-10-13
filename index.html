@@ -785,7 +785,7 @@
       <div class="brand-logo-badge">🎓</div>
       <div class="brand-titles">
         <h1>La vida académica</h1>
-        <p>Filosofía y Letras (Puán - UBA) • Edición tablero de la vida</p>
+        <p>Filosofía y Letras (Puán - UBA) • Idea de Mariano Vilar • Realizado con Google Antigravity</p>
       </div>
     </div>
     <div class="header-actions">
@@ -875,6 +875,11 @@
           </div>
         </div>
 
+              <!-- Créditos de autoría -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; text-align: center; font-size: 0.74rem; color: #475569; line-height: 1.4;">
+          Idea y autoría: <strong>Mariano Vilar</strong><br>
+          Realizado con <strong>Google Antigravity</strong>
+        </div>
       </aside>
 
       <!-- TABLERO VISUAL ESTILO "EL JUEGO DE LA VIDA" -->
@@ -1194,6 +1199,10 @@
 
         <h4 style="margin-top: 10px; color: #1e3a8a;">🏆 Los cuatro destinos profesionales:</h4>
         <p>Al llegar a la última casilla y completar las materias, el sistema revela cuál de las cuatro trayectorias has construido al graduarte: <strong>Perfil académico y claustro</strong>, <strong>Vocación docente y trinchera</strong>, <strong>Creador/a y agitador/a cultural</strong> o <strong>Pragmático/a fuera del claustro</strong>.</p>
+              <div style="margin-top: 14px; padding: 10px 14px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.82rem; color: #475569; text-align: center; line-height: 1.5;">
+          💡 <strong>Idea y autoría intelectual:</strong> Mariano Vilar<br>
+          ⚡ <strong>Desarrollo y diseño:</strong> Realizado con Google Antigravity
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn-primary" id="btn-close-rules">¡Entendido!</button>
@@ -1241,6 +1250,10 @@
           </div>
         </div>
 
+      </div>
+      <div style="font-size: 0.78rem; color: #64748b; text-align: center; margin-top: 10px; border-top: 1px solid #e2e8f0; padding-top: 8px;">
+          Juego concebido por <strong>Mariano Vilar</strong> • Realizado con <strong>Google Antigravity</strong>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn-primary" id="btn-play-again" style="background: linear-gradient(135deg, #ec4899, #be185d);">
@@ -1388,7 +1401,7 @@
       { id: 6, x: 330, y: 100, title: "Comisión de prácticos", type: "decision", icon: "📝", stageId: 1, color: "#f97316", cardKey: "comision_practico" },
       { id: 7, x: 460, y: 90, title: "Primer final oral", type: "avance", icon: "📚", stageId: 1, color: "#06b6d4", cardKey: "primer_final_oral" },
       { id: 8, x: 590, y: 90, title: "Bar de Puán", type: "personal", icon: "🍻", stageId: 1, color: "#f59e0b", cardKey: "bar_de_puan" },
-      { id: 9, x: 720, y: 100, title: "Jornadas de ingreso", type: "oportunidad", icon: "🎤", stageId: 1, color: "#9333ea", cardKey: "jornadas_estudiantes" },
+      { id: 9, x: 720, y: 100, title: "Paro de transporte", type: "crisis", icon: "🚌", stageId: 1, color: "#ef4444", cardKey: "paro_transporte" },
 
       // PARTE 2: PARTE MEDIA DE LA CARRERA
       { id: 10, x: 850, y: 140, title: "Parada: contacto con cátedra", type: "parada", icon: "🛑", stageId: 2, color: "#b91c1c", isStop: true, cardKey: "contacto_catedra" },
@@ -1397,19 +1410,19 @@
       { id: 13, x: 1000, y: 440, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 2, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Cobrás la beca de ayuda económica o tus changas estudiantiles.", autoBonus: { recursos: 25, bienestar: 6 } },
       { id: 14, x: 990, y: 560, title: "Colectivo artístico", type: "oportunidad", icon: "🎭", stageId: 2, color: "#9333ea", cardKey: "colectivo_artistico" },
       { id: 15, x: 940, y: 670, title: "Fanzine y revista", type: "decision", icon: "🗞️", stageId: 2, color: "#f97316", cardKey: "revista_fanzine" },
-      { id: 16, x: 830, y: 720, title: "Crisis vocacional", type: "crisis", icon: "⚡", stageId: 2, color: "#ef4444", cardKey: "crisis_mitad_carrera" },
+      { id: 16, x: 830, y: 720, title: "Gripe y final oral", type: "crisis", icon: "🤒", stageId: 2, color: "#ef4444", cardKey: "gripe_finales" },
       { id: 17, x: 700, y: 730, title: "Coloquio estudiantil", type: "oportunidad", icon: "🎙️", stageId: 2, color: "#9333ea", cardKey: "coloquio_avanzados" },
-      { id: 18, x: 410, y: 730, title: "Trabajo de archivo", type: "decision", icon: "🏛️", stageId: 2, color: "#f97316", cardKey: "trabajo_archivo" },
+      { id: 18, x: 410, y: 730, title: "Crisis de alquiler", type: "crisis", icon: "📦", stageId: 2, color: "#ef4444", cardKey: "crisis_alquiler" },
       { id: 19, x: 290, y: 710, title: "Junta departamental", type: "evento", icon: "👥", stageId: 2, color: "#0284c7", cardKey: "comision_carrera" },
 
       // PARTE 3: PARTE FINAL DE LA CARRERA
-      { id: 20, x: 200, y: 620, title: "Parada: ayudantía de segunda", type: "parada", icon: "🛑", stageId: 3, color: "#b91c1c", isStop: true, cardKey: "ayudantia_segunda" },
+      { id: 20, x: 200, y: 620, title: "Parada: ayudantía o proyecto", type: "parada", icon: "🛑", stageId: 3, color: "#b91c1c", isStop: true, cardKey: "ayudantia_segunda" },
       { id: 21, x: 210, y: 490, title: "Horas en secundaria", type: "decision", icon: "🎒", stageId: 3, color: "#f97316", cardKey: "horas_escuela" },
       { id: 22, x: 240, y: 370, title: "Adscripción formal", type: "oportunidad", icon: "📑", stageId: 3, color: "#9333ea", cardKey: "adscripcion_formal" },
       { id: 23, x: 340, y: 290, title: "Trabajo editorial", type: "decision", icon: "💼", stageId: 3, color: "#f97316", cardKey: "trabajo_redaccion" },
       { id: 24, x: 470, y: 240, title: "Día de cobro", type: "cobro", icon: "💵", stageId: 3, color: "#16a34a", isAuto: true, autoText: "¡Día de cobro! Ingresan tus honorarios docentes y colaboraciones.", autoBonus: { recursos: 30, bienestar: 8 } },
       { id: 25, x: 620, y: 240, title: "Seminario temático", type: "decision", icon: "📖", stageId: 3, color: "#f97316", cardKey: "seminario_investigacion" },
-      { id: 26, x: 750, y: 280, title: "Agotamiento final", type: "personal", icon: "🧘", stageId: 3, color: "#f59e0b", cardKey: "agotamiento_final" },
+      { id: 26, x: 750, y: 280, title: "Colapso físico", type: "crisis", icon: "🩺", stageId: 3, color: "#ef4444", cardKey: "colapso_salud" },
       { id: 27, x: 820, y: 370, title: "Extensión barrial", type: "oportunidad", icon: "🌱", stageId: 3, color: "#9333ea", cardKey: "extension_universitaria" },
       { id: 28, x: 800, y: 490, title: "Última monografía", type: "avance", icon: "🎓", stageId: 3, color: "#06b6d4", cardKey: "monografia_seminario" },
       { id: 29, x: 740, y: 600, title: "Graduación en Puán", type: "final", icon: "🏆", stageId: 3, color: "#be185d", isAuto: true, autoText: "¡Llegaste a la meta! Terminaste todas las materias de la carrera. ¡Sos graduado/a de Puán!" }
@@ -1590,22 +1603,22 @@
         ]
       },
 
-      jornadas_estudiantes: {
-        title: "Jornadas de investigación para ingresantes",
-        category: "oportunidad",
-        icon: "🎤",
-        narrative: "Se organizan jornadas donde estudiantes avanzados presentan sus primeros ensayos. Te proponen colaborar como asistente de sala o moderador/a.",
+      paro_transporte: {
+        title: "Paro sorpresivo de transporte el día del parcial",
+        category: "crisis",
+        icon: "🚌",
+        narrative: "Hay paro general de trenes y subtes un día de examen parcial presencial. Vivís lejos y las avenidas están totalmente colapsadas. No llegar implica ir directo a recuperatorio.",
         options: [
           {
-            text: "Colaborar en la organización y escuchar ponencias",
-            consequenceText: "Hacés contactos valiosos con docentes del departamento y descubrís cómo funciona el mundo académico.",
-            effects: { capitalInstitucional: 8, sociabilidad: 6, capitalAcademico: 4 },
+            text: "Pagar un remis carísimo de urgencia para llegar a rendir",
+            consequenceText: "Llegás con el corazón en la boca cinco minutos antes de repartir las hojas; tus ahorros del mes se esfuman por completo.",
+            effects: { recursos: -18, capitalAcademico: 8, bienestar: -8 },
             tag: "investigador"
           },
           {
-            text: "Aprovechar la tarde libre para ponerte al día",
-            consequenceText: "Terminás todos los prácticos atrasados y ganás horas valiosas para estudiar sin presiones.",
-            effects: { bienestar: 8, capitalInstitucional: -4, capitalAcademico: 4 },
+            text: "Quedarte en casa y jugártela en el recuperatorio",
+            consequenceText: "Cuidás tu bolsillo pero vivís las siguientes dos semanas con la soga al cuello preparando el examen sin margen de error.",
+            effects: { recursos: 2, capitalAcademico: -6, bienestar: -10 },
             tag: "tech_privado"
           }
         ]
@@ -1717,22 +1730,22 @@
         ]
       },
 
-      crisis_mitad_carrera: {
-        title: "Crisis vocacional de mitad de carrera",
+      gripe_finales: {
+        title: "Gripe y fiebre antes de un examen final",
         category: "crisis",
-        icon: "⚡",
-        narrative: "Llevás la mitad de la carrera aprobada y te asalta la duda existencial: tus conocidos de otras carreras ya tienen empleo formal y vos seguís viviendo con fotocopias y café.",
+        icon: "🤒",
+        narrative: "A dos días del examen final de una materia correlativa clave, caés en cama con 39 grados de fiebre, tos seca y dolor de cuerpo. Apenas podés sostener los textos en la cama.",
         options: [
           {
-            text: "Reafirmar tu vocación humanística y redoblar la apuesta",
-            consequenceText: "Te convencés de que pensar críticamente el mundo vale más que cualquier oficina corporativa.",
-            effects: { compromisoSocial: 10, bienestar: 6, recursos: -6 },
-            tag: "docente"
+            text: "Tomar antifebriles e ir a rendir delirando al aula",
+            consequenceText: "Entrás al aula temblando y exponés con voz quebrada; el tribunal valora tu entereza y te aprueba con lo justo, pero quedás una semana en cama.",
+            effects: { capitalAcademico: 10, bienestar: -18, prestigio: 4 },
+            tag: "investigador"
           },
           {
-            text: "Buscar un trabajo administrativo para tener ingresos propios",
-            consequenceText: "Empezás a trabajar media jornada; tu billetera respira y ganás independencia económica real.",
-            effects: { recursos: 14, capitalAcademico: -6, bienestar: 4 },
+            text: "Guardar reposo y postergar el final para el próximo turno",
+            consequenceText: "Priorizás tu salud y te recuperás con descanso, pero se te traban las correlatividades del cuatrimestre siguiente y perdés un turno.",
+            effects: { bienestar: 10, capitalAcademico: -8, bienestar: -2 },
             tag: "tech_privado"
           }
         ]
@@ -1759,23 +1772,23 @@
         ]
       },
 
-      trabajo_archivo: {
-        title: "Tardes en el archivo de la biblioteca",
-        category: "decision",
-        icon: "🏛️",
-        narrative: "Para un trabajo de investigación podés encerrarte en el archivo histórico a revisar cartas manuscritas de época o trabajar con debates teóricos digitalizados en internet.",
+      crisis_alquiler: {
+        title: "Aumento de alquiler y mudanza forzada",
+        category: "crisis",
+        icon: "📦",
+        narrative: "El dueño no renueva el contrato del departamento o te triplican el valor del alquiler a mitad de cursada. Tenés que embalar cajas y buscar dónde vivir en plena semana de entregas de prácticos.",
         options: [
           {
-            text: "Revisar manuscritos y fuentes originales con guantes",
-            consequenceText: "Descubrís un documento inédito fascinante; los docentes elogian tu vocación filológica de archivo.",
-            effects: { capitalAcademico: 12, prestigio: 6, bienestar: -6 },
-            tag: "investigador"
+            text: "Mudarte mucho más lejos a la periferia para pagar menos",
+            consequenceText: "Aliviás tu presupuesto mensual pero sumás dos horas de viaje diarias en trenes atestados, perdiendo tiempo vital de estudio.",
+            effects: { recursos: 12, bienestar: -14, capitalAcademico: -6 },
+            tag: "tech_privado"
           },
           {
-            text: "Analizar bibliografía teórica digitalizada desde tu casa",
-            consequenceText: "Escribís tu monografía cómodo/a con mate en tu escritorio y cerrás la materia con solvencia.",
-            effects: { bienestar: 8, capitalAcademico: 6, recursos: 2 },
-            tag: "tech_privado"
+            text: "Endeudarte con familiares para quedarte cerca de Puán",
+            consequenceText: "Preservás tus tiempos de cursada y biblioteca, pero cargás con la angustia cotidiana de deber dinero a tus afectos.",
+            effects: { recursos: -16, capitalAcademico: 8, bienestar: -6 },
+            tag: "investigador"
           }
         ]
       },
@@ -1803,21 +1816,21 @@
 
       // --- PARTE 3: PARTE FINAL DE LA CARRERA ---
       ayudantia_segunda: {
-        title: "Concurso para ayudantía de segunda",
+        title: "Ayudantía de segunda o proyecto departamental",
         category: "parada",
         icon: "🛑",
-        narrative: "Se abre una selección interna de antecedentes y oposición para ayudante de segunda (ayudante alumno) en una cátedra clave. Es tu primer cargo docente oficial de grado.",
+        narrative: "Llegaste al tramo final con promedio destacado. Las ayudantías de segunda tradicionales por concurso de cátedra son muy escasas hoy en día, pero se abre en paralelo una convocatoria para sumarse como ayudante alumno/a en un proyecto departamental de investigación y extensión.",
         options: [
           {
-            text: "Preparar intensivamente la clase de oposición frente al jurado",
-            consequenceText: "Das una clase magistral brillante; el jurado te otorga el primer lugar y ya tenés cargo en cátedra.",
+            text: "Concursar por la escasa ayudantía de segunda en cátedra",
+            consequenceText: "Te batís a duelo en una clase de oposición formal frente al jurado docente; ganás prestigio académico tradicional a costa de semanas de estrés y tensión de claustro.",
             effects: { capitalAcademico: 14, prestigio: 12, bienestar: -10 },
             tag: "investigador"
           },
           {
-            text: "Presentarte con solvencia sin descuidar tu cursada actual",
-            consequenceText: "Quedás bien ubicado/a en el orden de mérito y cuidás tu energía para terminar las materias.",
-            effects: { bienestar: 8, capitalInstitucional: 8, sociabilidad: 6 },
+            text: "Postularte como ayudante en el proyecto departamental",
+            consequenceText: "Te integrás al equipo interdisciplinario del departamento; ganás experiencia de gestión, vínculos institucionales colectivos y un ambiente de trabajo formativo.",
+            effects: { capitalInstitucional: 14, sociabilidad: 10, bienestar: 6 },
             tag: "docente"
           }
         ]
@@ -1907,23 +1920,23 @@
         ]
       },
 
-      agotamiento_final: {
-        title: "El último esfuerzo antes del título",
-        category: "personal",
-        icon: "🧘",
-        narrative: "Quedan apenas los trámites y las últimas entregas, pero arrastrás el cansancio acumulado de años de cursadas, exámenes y fotocopias.",
+      colapso_salud: {
+        title: "Colapso físico y estrés en la recta final",
+        category: "crisis",
+        icon: "🩺",
+        narrative: "Entre planificar clases en la escuela secundaria, cursar seminarios y escribir monografías, tu cuerpo colapsa: contracturas cervicales agudas y una tendinitis en la mano que no te deja teclear.",
         options: [
           {
-            text: "Hacer una pausa de descanso para cuidar tu salud mental",
-            consequenceText: "Recuperás energías, dormís ocho horas y volvés al campus con el ánimo renovado para el cierre.",
-            effects: { bienestar: 14, recursos: -4, sociabilidad: 4 },
-            tag: "critico"
+            text: "Infiltrarte con analgésicos para no aflojar el ritmo",
+            consequenceText: "Seguís tecleando con una muñequera ortopédica; entregás todo a tiempo, pero terminás el cuatrimestre con dolor crónico.",
+            effects: { capitalAcademico: 12, bienestar: -16, recursos: 4 },
+            tag: "tech_privado"
           },
           {
-            text: "Meterle a fondo sin descanso para recibirte en este turno",
-            consequenceText: "A pura cafeína y voluntad férrea, liquidás todas las obligaciones pendientes en tiempo récord.",
-            effects: { capitalAcademico: 10, bienestar: -12, recursos: 4 },
-            tag: "tech_privado"
+            text: "Pedir licencia médica y frenar las entregas un mes",
+            consequenceText: "Hacés kinesiología y descansás el cuerpo, a costa de postergar la firma de actas y perder el presentismo docente.",
+            effects: { bienestar: 14, capitalAcademico: -6, recursos: -8 },
+            tag: "docente"
           }
         ]
       },
