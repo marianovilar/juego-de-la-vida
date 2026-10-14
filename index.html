@@ -1076,14 +1076,15 @@
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <label style="font-size: 0.85rem; font-weight: 800; color: #334155;">Carrera en humanidades:</label>
           <select id="char-career" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.95rem; font-family: inherit;">
-            <option value="Letras">Letras (Literatura y Lingüística)</option>
+            <option value="Letras">Letras</option>
             <option value="Filosofía">Filosofía</option>
             <option value="Historia">Historia</option>
-            <option value="Artes">Artes (Cine, Teatro, Plásticas)</option>
+            <option value="Artes">Artes</option>
             <option value="Ciencias Antropológicas">Ciencias Antropológicas</option>
             <option value="Geografía">Geografía</option>
             <option value="Edición">Edición</option>
             <option value="Ciencias de la Educación">Ciencias de la Educación</option>
+            <option value="Bibliotecología">Bibliotecología</option>
           </select>
         </div>
 
@@ -2715,7 +2716,8 @@
             "Ciencias Antropológicas": "🦴",
             "Geografía": "🗺️",
             "Edición": "🖋️",
-            "Ciencias de la Educación": "✏️"
+            "Ciencias de la Educación": "✏️",
+            "Bibliotecología": "📚"
           };
           GameState.player.avatar = avatarsByCareer[careerSelect] || "🎓";
 
